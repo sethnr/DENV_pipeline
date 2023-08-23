@@ -25,10 +25,11 @@ if [[ ! "$WORK_DIR" || ! -d "$WORK_DIR" ]]; then
   exit 1
 fi
 
-echo "getting top ${READS} reads from infiles"
+echo "getting top ${READS} reads from infiles" 1>&2
 let "RLINES = $READS / 2 * 4"
 for FQ in $1/*fastq.gz; do
     BASENAME=$(basename ${FQ/fastq.gz/head.fastq})
+    echo $BASENAME 1>&2
     echo gunzip -dc $FQ \| head -n $RLINES \> ${TEMPDIR}/${BASENAME}
     gunzip -dc $FQ | head -n $RLINES > ${TEMPDIR}/${BASENAME}
 done
