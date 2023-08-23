@@ -5,7 +5,7 @@ PROB=1e-100
 BLOOM=10
 GSIZE=11k
 
-while getopts "p:b:r:T:" OPTION; do
+while getopts "p:b:r:g:T:" OPTION; do
     case $OPTION in
     p) PROB=$OPTARG    ;;
     r) READS=$OPTARG   ;;
