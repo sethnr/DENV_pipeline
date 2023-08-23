@@ -23,12 +23,12 @@ shift $(expr $OPTIND - 1 )
 echo "getting top ${READS} reads from infiles"
 let "RLINES = $READS / 2 * 4"
 for FQ in $1/*fastq.gz; do
-    echo gunzip -dc $FQ \| head -n $RLINES \> ${tempdir}/$(basename ${FQ/fastq.gz/head.fastq})
-    gunzip -dc $FQ | head -n $RLINES > ${tempdir}/$(basename ${FQ/fastq.gz/head.fastq})
+    echo gunzip -dc $FQ \| head -n $RLINES \> ${TEMPDIR}/$(basename ${FQ/fastq.gz/head.fastq})
+    gunzip -dc $FQ | head -n $RLINES > ${TEMPDIR}/$(basename ${FQ/fastq.gz/head.fastq})
 done
 
-cat ${tempdir}/*head.fastq >  ${tempdir}/${READS}.fastq
-rm ${tempdir}/*head.fastq
+cat ${TEMPDIR}/*head.fastq >  ${TEMPDIR}/${READS}.fastq
+rm ${TEMPDIR}/*head.fastq
 
 echo "mashing ${READS} reads against hashes"
 mash  dist  -m $BLOOM -r -g $GSIZE DENV_all.msh ${1}/head_${READS}.fastq
