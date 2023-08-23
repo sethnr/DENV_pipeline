@@ -1,4 +1,4 @@
-container: "docker://sethnr/pgcoe_anypipe:0.01"
+#container: "docker://sethnr/pgcoe_anypipe:0.01"
 
 import os
 import sys
@@ -31,14 +31,18 @@ rule getstrain:
     params:
         reads=10000, # compare top N reads to refs
         bloom=10,    # bloom filter kmers with < N coverage (seq errors)
-        tempdir=os.path.join(config["tempdir"],"{sample}")
+	gsize="11k",    # estimated genome size (for prob assignment)
+	masher = os.path.join(workflow.current_basedir,"masher.sh"),
     log: 
         "{outdir}/log_files/getstrain_{sample}.log", 
     shell:
         """
-        masher.sh -r {params.reads} \
+	pwd    ;
+	ls -la ;
+	ls {params.masher}
+        {params.masher} -r {params.reads} \
                 -b {params.bloom} \
-                -T {params.tempdir} \
+                -g {params.gsize} \
                 {input.read_location} > {output.strain_calls}
         """
 

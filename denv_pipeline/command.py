@@ -108,14 +108,19 @@ def main(sysargs = sys.argv[1:]):
             print(f" - {k} ")
    
     if not config["dry_run"]:
-        if config["slurm"] and config["singularity"]:
+        if config["singularity"] and config["slurm"]:
             status = snakemake.snakemake(snakefile, printshellcmds=False, forceall=True, force_incomplete=True,
                                     workdir=cwd,config=config,lock=False, slurm=True, cores=config["slurm_cores"],
-                                    use_singularity=True
+                                         use_singularity=True,
+                                         singularity_args="-B {}/{}".format(thisdir,"scripts"),
                                     )
         elif config["slurm"]:
             status = snakemake.snakemake(snakefile, printshellcmds=False, forceall=True, force_incomplete=True,
                                     workdir=cwd,config=config,lock=False, slurm=True, cores=config["slurm_cores"]
+                                    )
+        elif config["singularity"]:
+            status = snakemake.snakemake(snakefile, printshellcmds=False, forceall=True, force_incomplete=True,
+                                    workdir=cwd,config=config,lock=False, use_singularity=True
                                     )
         else:
             status = snakemake.snakemake(snakefile, printshellcmds=False, forceall=True, force_incomplete=True,

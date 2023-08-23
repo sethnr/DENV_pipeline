@@ -20,9 +20,12 @@ done
 shift $(expr $OPTIND - 1 )
 
 
-TEMPDIR=`mktemp -d `
-if [[ ! "$WORK_DIR" || ! -d "$WORK_DIR" ]]; then
-  exit 1
+TEMPDIR=`mktemp -d`;
+sleep 1 
+
+if [[ ! "$TEMPDIR" || ! -d "$TEMPDIR" ]]; then
+    echo "!!!!!"
+    exit 1
 fi
 
 echo "getting top ${READS} reads from infiles" 1>&2
