@@ -1,3 +1,5 @@
+container: "docker://sethnr/pgcoe_anypipe:0.01"
+
 import os
 import sys
 import datetime as dt
@@ -9,9 +11,6 @@ from denv_pipeline.scripts import make_summary_files
 
 
 cwd = os.getcwd()
-
-container: "docker://sethnr/pgcoe_anypipe:0.01"
-
 
 rule all: 
     input:
@@ -31,10 +30,14 @@ rule getstrain:
     container: "docker://sethnr/pgcoe_anypipe:0.01"
     params:
         reads=10000, # compare top N reads to refs
-        bloom=10    # bloom filter kmers with < N coverage (seq errors)
+        bloom=10,    # bloom filter kmers with < N coverage (seq errors)
+        tempdir=os.path.join(config["tempdir"],{strain})
     shell:
         """
-        masher.sh -r {params.reads} -b {params.bloom} {input.read_location} > {output.strain_calls}
+        masher.sh -r {params.reads} \
+                -b {params.bloom} \
+                -T {params.tempdir} \
+                {input.read_location} > {output.strain_calls}
         """
 
 rule mapper:
