@@ -20,6 +20,11 @@ done
 shift $(expr $OPTIND - 1 )
 
 
+TEMPDIR=`mktemp -d `
+if [[ ! "$WORK_DIR" || ! -d "$WORK_DIR" ]]; then
+  exit 1
+fi
+
 echo "getting top ${READS} reads from infiles"
 let "RLINES = $READS / 2 * 4"
 for FQ in $1/*fastq.gz; do
@@ -32,3 +37,5 @@ rm ${TEMPDIR}/*head.fastq
 
 echo "mashing ${READS} reads against hashes"
 mash  dist  -m $BLOOM -r -g $GSIZE DENV_all.msh ${1}/head_${READS}.fastq
+
+#rm -r ${TEMPDIR}
