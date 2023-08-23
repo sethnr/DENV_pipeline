@@ -25,8 +25,8 @@ for FQ in $1/*fastq.gz; do
     gunzip -dc $FQ | head -n $RLINES > ${FQ/fastq.gz/head.fastq}
 done
 
-cat $1/*head.fastq > ${1}.head.fq
+cat $1/*head.fastq > ${1}/head_${READS}.fastq
 rm $1/*head.fastq
 
 
-mash  dist  -m $BLOOM -r -g $GSIZE DENV_all.msh ${1}.head.fq
+mash  dist  -m $BLOOM -r -g $GSIZE DENV_all.msh ${1}/head_${READS}.fastq

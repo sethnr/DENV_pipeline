@@ -15,9 +15,28 @@ rule all:
         os.path.join(config["outdir"], "results", "virus_calls.tsv"),
         os.path.join(config["outdir"], "results", "variant_plot.pdf")
 
+rule getstrain:
+    input:
+        read_location = os.path.join(config["indir"], "{sample}")
+    output:
+        strain_calls = "{outdir}/results/{sample}_strain_match.tsv",
+    resources:
+        partition="day",
+        mem_mb_per_cpu="8G",
+        cpus_per_task=1,
+        runtime=300
+    params:
+        reads=10000 # compare top N reads to refs
+        bloom=10    # bloom filter kmers with < N coverage (seq errors)
+    shell:
+        """
+        masher.sh -r {params.reads} -b {params.bloom} {input.read_location} > {output.strain_calls}
+        """
+
 rule mapper:
     input:
         read_location = os.path.join(config["indir"], "{sample}")
+        strainmatch="{outdir}/results/{sample}_strain_match.tsv",
     output:
         individual_all_virustype_info = temp(os.path.join(config["tempdir"], "{sample}_all_virustype_info.txt"))
     log:
