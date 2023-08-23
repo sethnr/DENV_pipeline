@@ -111,7 +111,7 @@ def main(sysargs = sys.argv[1:]):
         if config["slurm"] and config["singularity"]:
             status = snakemake.snakemake(snakefile, printshellcmds=False, forceall=True, force_incomplete=True,
                                     workdir=cwd,config=config,lock=False, slurm=True, cores=config["slurm_cores"],
-                                    singularity=True
+                                    use-singularity=True
                                     )
         elif config["slurm"]:
             status = snakemake.snakemake(snakefile, printshellcmds=False, forceall=True, force_incomplete=True,
