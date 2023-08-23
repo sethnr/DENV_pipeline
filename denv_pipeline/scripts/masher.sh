@@ -5,7 +5,7 @@ PROB=1e-100
 BLOOM=10
 GSIZE=11k
 
-while getopts "p:b:r:" OPTION; do
+while getopts "p:b:r:T:" OPTION; do
     case $OPTION in
     p) PROB=$OPTARG    ;;
     r) READS=$OPTARG   ;;
@@ -31,5 +31,4 @@ cat ${tempdir}/*head.fastq >  ${tempdir}/${READS}.fastq
 rm ${tempdir}/*head.fastq
 
 echo "mashing ${READS} reads against hashes"
-
 mash  dist  -m $BLOOM -r -g $GSIZE DENV_all.msh ${1}/head_${READS}.fastq
