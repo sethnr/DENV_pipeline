@@ -39,7 +39,7 @@ rule getstrain:
 rule mapper:
     input:
         read_location = os.path.join(config["indir"], "{sample}"),
-        strainmatch="{outdir}/results/{sample}_strain_match.tsv",
+        strainmatch=os.path.join(config["outdir"],"results","{sample}_strain_match.tsv"),
     output:
         individual_all_virustype_info = temp(os.path.join(config["tempdir"], "{sample}_all_virustype_info.txt"))
     log:
