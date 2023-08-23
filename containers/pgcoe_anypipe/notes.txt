@@ -1,0 +1,1 @@
+docker build ./ -t sethnr/pgcoe_anypipe:0.01
