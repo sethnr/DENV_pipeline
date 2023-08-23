@@ -29,7 +29,7 @@ rule getstrain:
         cpus_per_task=1,
         runtime=300
     params:
-        reads=10000 # compare top N reads to refs
+        reads=10000, # compare top N reads to refs
         bloom=10    # bloom filter kmers with < N coverage (seq errors)
     shell:
         """
