@@ -11,7 +11,7 @@ setup(name='pathag_pipeline',
       packages=find_packages(),
       scripts=[
             "denv_pipeline/scripts/denv_pipeline.smk",
-            "denv_pipeline/scripts/mapper.sh"
+            "denv_pipeline/scripts/mapper.sh",
             "denv_pipeline/scripts/masher.sh"
             ],
       description='Bioinformatic pipeline to generate reads and consensus sequences for DENV',
