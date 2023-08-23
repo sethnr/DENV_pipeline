@@ -6,12 +6,13 @@ import pkg_resources
 
 from denv_pipeline import __version__, _program
 
-setup(name='denv_pipeline',
+setup(name='pathag_pipeline',
       version=__version__,
       packages=find_packages(),
       scripts=[
             "denv_pipeline/scripts/denv_pipeline.smk",
             "denv_pipeline/scripts/mapper.sh"
+            "denv_pipeline/scripts/masher.sh"
             ],
       description='Bioinformatic pipeline to generate reads and consensus sequences for DENV',
       package_data={"denv_pipeline":["DENV_primers_and_refs/*"]},

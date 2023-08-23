@@ -10,6 +10,9 @@ from denv_pipeline.scripts import make_summary_files
 
 cwd = os.getcwd()
 
+container: "docker://sethnr/pgcoe_anypipe:0.01"
+
+
 rule all: 
     input:
         os.path.join(config["outdir"], "results", "virus_calls.tsv"),
