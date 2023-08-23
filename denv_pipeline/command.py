@@ -40,6 +40,7 @@ def main(sysargs = sys.argv[1:]):
 
     parser.add_argument("--slurm", help="flag for if running on HPC with slurm", action="store_true")
     parser.add_argument("--slurm-cores", help="number of slurm cores to assign. Default is 10", dest="slurm_cores", type=int)
+    parser.add_argument("--singularity", help="flag for running on HPC with apptainer / singularity", action="store_true")
     parser.add_argument("--verbose", "-v", dest="verbose", action="store_true")
     parser.add_argument("--help", "-h", action="store_true", dest="help")
     parser.add_argument("--overwrite", help="overwrite current results", action="store_true")
@@ -107,7 +108,12 @@ def main(sysargs = sys.argv[1:]):
             print(f" - {k} ")
    
     if not config["dry_run"]:
-        if config["slurm"]:
+        if config["slurm"] and config["singularity"]:
+            status = snakemake.snakemake(snakefile, printshellcmds=False, forceall=True, force_incomplete=True,
+                                    workdir=cwd,config=config,lock=False, slurm=True, cores=config["slurm_cores"],
+                                    singularity=True
+                                    )
+        elif config["slurm"]:
             status = snakemake.snakemake(snakefile, printshellcmds=False, forceall=True, force_incomplete=True,
                                     workdir=cwd,config=config,lock=False, slurm=True, cores=config["slurm_cores"]
                                     )
