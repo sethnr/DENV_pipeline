@@ -32,6 +32,8 @@ rule getstrain:
         reads=10000, # compare top N reads to refs
         bloom=10,    # bloom filter kmers with < N coverage (seq errors)
         tempdir=os.path.join(config["tempdir"],"{sample}")
+    log: 
+        os.path.join(config["outdir"],"getstrain","{sample}.log"), 
     shell:
         """
         masher.sh -r {params.reads} \
