@@ -33,7 +33,7 @@ rule getstrain:
         bloom=10,    # bloom filter kmers with < N coverage (seq errors)
         tempdir=os.path.join(config["tempdir"],"{sample}")
     log: 
-        os.path.join(config["outdir"],"getstrain","{sample}.log"), 
+        "{outdir}/log_files/getstrain_{sample}.log", 
     shell:
         """
         masher.sh -r {params.reads} \
