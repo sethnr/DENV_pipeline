@@ -1,14 +1,40 @@
 #!/usr/bin/env bash
-fname=$1
-read1=$2
-read2=$3
-primer_dir=$4
-serotype_caller=$5
-empty_file_maker=$6
-depth=$7
-threshold=$8
-tempdir=$9
-log=$10
+
+# fname=$1
+# read1=$2
+# read2=$3
+# primer_dir=$4
+# serotype_caller=$5
+# empty_file_maker=$6
+# depth=$7
+# threshold=$8
+# tempdir=$9
+# log=$10
+
+while getopts "n:p:s:e:d:c:T:L:" OPTION; do
+    case $OPTION in
+    n) fname=$OPTARG    ;;
+    p) primer_dir=$OPTARG   ;;
+    s) serotype_caller=$OPTARG   ;;
+    c) precalls=$OPTARG ;;
+    e) empty_file_maker=$OPTARG   ;;
+    d) depth=$OPTARG ;;
+    t) threshold=$OPTARG ;;
+    T) tempdir=$OPTARG ;;
+    L) log=$OPTARG ;;
+    *)  echo "option not recognised"
+        exit 1
+        ;;
+    esac
+done
+shift $(expr $OPTIND - 1 )
+read1 = $1;
+read2 = $2;
+
+if [ -z "$precalls" ]; then
+    precalls = "${primer_dir}/refs.txt"} 
+fi
+
 
 while IFS= read -r virustype || [[ -n "$virustype" ]]; do 
 
@@ -74,4 +100,4 @@ while IFS= read -r virustype || [[ -n "$virustype" ]]; do
 
     echo "--->>>>> Finished"
 
-done < "${primer_dir}/refs.txt"
+done < $precalls

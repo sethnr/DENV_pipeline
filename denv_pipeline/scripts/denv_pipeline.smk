@@ -70,7 +70,14 @@ rule mapper:
         cpus_per_task=2,
         runtime=300
     run:
-        shell("{params.mapper_script} {wildcards.sample} {input.read_location}/*R1* {input.read_location}/*R2* {params.primer_dir} {params.python_script} {params.python_script2} {params.depth} {params.threshold} {params.tempdir} {log.log}  >> {log.log} 2>&1")
+        #shell("{params.mapper_script} {wildcards.sample} {input.read_location}/*R1* {input.read_location}/*R2* {params.primer_dir} {params.python_script} {params.python_script2} {params.depth} {params.threshold} {params.tempdir} {log.log}  >> {log.log} 2>&1")
+        n:p:s:e:d:c:T:L:
+        shell("{params.mapper_script}  \
+                -n {wildcards.sample} -p {params.primer_dir} -s {params.python_script} \
+                -e {params.python_script2} -d {params.depth} -t {params.threshold} \
+                -T {params.tempdir} -L {log.log} \
+                {input.read_location}/*R1* {input.read_location}/*R2* \
+                 >> {log.log} 2>&1")
         
         if not os.path.exists(os.path.join(params.tempdir,f"{wildcards.sample}_all_virustype_info.txt")):
             shell("touch {params.tempdir}/{wildcards.sample}_all_virustype_info.txt")
