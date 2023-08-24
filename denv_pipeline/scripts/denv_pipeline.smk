@@ -31,15 +31,17 @@ rule getstrain:
     params:
         reads=10000, # compare top N reads to refs
         bloom=10,    # bloom filter kmers with < N coverage (seq errors)
-	gsize="11k",    # estimated genome size (for prob assignment)
+	gsize="11k", # estimated genome size (for prob assignment)
+	prob=1e-50,  # max mash prob to call
+	dist=0.25,   # max mash dist to call
 	masher = os.path.join(workflow.current_basedir,"masher.sh"),
     log: 
         "{outdir}/log_files/getstrain_{sample}.log", 
     shell:
         """
-        {params.masher} -r {params.reads} \
-                -b {params.bloom} \
-                -g {params.gsize} \
+        {params.masher} \
+		-r {params.reads} -b {params.bloom} -g {params.gsize} \
+		-d {params.dist} -p {params.prob} \
                 {input.read_location} 1> {output.strain_calls} 2>{log}
         """
 

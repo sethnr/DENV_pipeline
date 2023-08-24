@@ -1,15 +1,16 @@
 #!/bin/bash
 
 READS=10000
-PROB=1e-100
-DIST=0.2
+PROB=1e-10
+DIST=0.5
 BLOOM=10
 GSIZE=11k
 PREFIX="outfile"
 
-while getopts "p:b:r:g:T:o:" OPTION; do
+while getopts "p:d:b:r:g:T:o:" OPTION; do
     case $OPTION in
     p) PROB=$OPTARG    ;;
+    d) DIST=$OPTARG    ;;
     r) READS=$OPTARG   ;;
     b) BLOOM=$OPTARG   ;;
     g) GSIZE=$OPTARG   ;;
@@ -48,6 +49,6 @@ mash  dist  -m $BLOOM -r -g $GSIZE DENV_all.msh ${TEMPDIR}/${READS}.fastq > ${PR
 
 
 #filter for max prob / dist, print genome names
-awk '($2+0 < ${DIST}+0 & $3 + 0 < ${PROB}+0) {print sub(".fastq","",$0)}' ${PREFIX}_mash.txt > ${PREFIX}_calls.txt
-
+#awk -v dist=$DIST -v prob=$PROB '($3 + $dist+0 < 0.5 && $4 < $prob+0) {print gensub(".fasta","","g",$1);}' ${PREFIX}_mash.txt > ${PREFIX}_calls.txt
+awk -v dist=$DIST -v prob=$PROB '($3+0 < dist+0 && $4+0 < prob+0) {sub(".fasta","",$1); print $1}' ${PREFIX}_mash.txt > ${PREFIX}_calls.txt
 #rm -r ${TEMPDIR}
