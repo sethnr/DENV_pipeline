@@ -45,13 +45,13 @@ rule getstrain:
 		-r {params.reads} -b {params.bloom} -g {params.gsize} \
 		-d {params.dist} -p {params.prob} \
         -o {params.prefix} \
-        {input.read_location} 1> {output.strain_calls} 2>{log}
+        {input.read_location}  2>{log}
         """
 
 rule mapper:
     input:
         read_location = os.path.join(config["indir"], "{sample}"),
-        strainmatch=os.path.join(config["outdir"],"results","{sample}_strain_match.tsv"),
+        mashcalls = os.path.join(config["outdir"],"results/mash/{sample}_calls.txt")
     output:
         individual_all_virustype_info = temp(os.path.join(config["tempdir"], "{sample}_all_virustype_info.txt"))
     log:
@@ -71,8 +71,7 @@ rule mapper:
         runtime=300
     run:
         #shell("{params.mapper_script} {wildcards.sample} {input.read_location}/*R1* {input.read_location}/*R2* {params.primer_dir} {params.python_script} {params.python_script2} {params.depth} {params.threshold} {params.tempdir} {log.log}  >> {log.log} 2>&1")
-        n:p:s:e:d:c:T:L:
-        shell("{params.mapper_script}  \
+        shell("{params.mapper_script}  -c {input.mashcalls} \
                 -n {wildcards.sample} -p {params.primer_dir} -s {params.python_script} \
                 -e {params.python_script2} -d {params.depth} -t {params.threshold} \
                 -T {params.tempdir} -L {log.log} \

@@ -11,7 +11,7 @@
 # tempdir=$9
 # log=$10
 
-while getopts "n:p:s:e:d:c:T:L:" OPTION; do
+while getopts "n:p:s:c:e:d:t:T:L:" OPTION; do
     case $OPTION in
     n) fname=$OPTARG    ;;
     p) primer_dir=$OPTARG   ;;
@@ -28,8 +28,8 @@ while getopts "n:p:s:e:d:c:T:L:" OPTION; do
     esac
 done
 shift $(expr $OPTIND - 1 )
-read1 = $1;
-read2 = $2;
+set read1 = $1;
+set read2 = $2;
 
 if [ -z "$precalls" ]; then
     precalls = "${primer_dir}/refs.txt"} 
