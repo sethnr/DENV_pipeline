@@ -43,7 +43,7 @@ def main(sysargs = sys.argv[1:]):
     parser.add_argument("--singularity", help="flag for running on HPC with apptainer / singularity", action="store_true")
     parser.add_argument("--verbose", "-v", dest="verbose", action="store_true")
     parser.add_argument("--help", "-h", action="store_true", dest="help")
-    parser.add_argument("--overwrite", help="overwrite current results", action="store_true")
+    parser.add_argument("--overwrite", help="overwrite current results", action="store_true", default=False)
 
     parser.add_argument("--ct-file",dest="ct_file", help="to produce a plot of Ct against coverage, provide a csv file containing Ct information by sample")
     parser.add_argument("--ct-column", dest="ct_column", help="Name of Ct column in Ct file for plot")
@@ -82,6 +82,7 @@ def main(sysargs = sys.argv[1:]):
 
     if config["overwrite"]:
         set_up_scripts.overwrite(config)
+        
     set_up_scripts.make_folders(config)
 
     if config["symlink"]:
@@ -109,22 +110,22 @@ def main(sysargs = sys.argv[1:]):
    
     if not config["dry_run"]:
         if config["singularity"] and config["slurm"]:
-            status = snakemake.snakemake(snakefile, printshellcmds=False, forceall=True, force_incomplete=True,notemp=config['temp'],
+            status = snakemake.snakemake(snakefile, printshellcmds=False, forceall=config["overwrite"], force_incomplete=True,notemp=config['temp'],
                                     workdir=cwd,config=config,lock=False, slurm=True, cores=config["slurm_cores"],
                                          use_singularity=True,
                                          singularity_args="-B {}/{}".format(thisdir,"scripts"),
                                     )
         elif config["slurm"]:
-            status = snakemake.snakemake(snakefile, printshellcmds=False, forceall=True, force_incomplete=True,notemp=config['temp'],
+            status = snakemake.snakemake(snakefile, printshellcmds=False, forceall=config["overwrite"], force_incomplete=True,notemp=config['temp'],
                                     workdir=cwd,config=config,lock=False, slurm=True, cores=config["slurm_cores"]
                                     )
         elif config["singularity"]:
-            status = snakemake.snakemake(snakefile, printshellcmds=False, forceall=True, force_incomplete=True,notemp=config['temp'],
+            status = snakemake.snakemake(snakefile, printshellcmds=False, forceall=config["overwrite"], force_incomplete=True,notemp=config['temp'],
                                          workdir=cwd,config=config,lock=False, use_singularity=True,
                                          singularity_args="-B {}/{}".format(thisdir,"scripts"),
                                     )
         else:
-            status = snakemake.snakemake(snakefile, printshellcmds=False, forceall=True, force_incomplete=True,notemp=config['temp'],
+            status = snakemake.snakemake(snakefile, printshellcmds=False, forceall=config["overwrite"], force_incomplete=True,notemp=config['temp'],
                                     workdir=cwd,config=config,lock=False
                                     )
 
