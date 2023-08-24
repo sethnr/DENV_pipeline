@@ -41,6 +41,6 @@ cat ${TEMPDIR}/*head.fastq >  ${TEMPDIR}/${READS}.fastq
 rm ${TEMPDIR}/*head.fastq
 
 echo "mashing ${READS} reads against hashes"
-mash  dist  -m $BLOOM -r -g $GSIZE DENV_all.msh ${1}/head_${READS}.fastq
+mash  dist  -m $BLOOM -r -g $GSIZE DENV_all.msh ${TEMPDIR}/${READS}.fastq
 
 #rm -r ${TEMPDIR}
