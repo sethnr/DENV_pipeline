@@ -14,8 +14,8 @@ cwd = os.getcwd()
 
 rule all: 
     input:
-        os.path.join(config["outdir"], "results", "virus_calls.tsv"),
-        os.path.join(config["outdir"], "results", "variant_plot.pdf")
+        os.path.join(config["outdir"], "results/summary", "virus_calls.tsv"),
+        os.path.join(config["outdir"], "results/summary", "variant_plot.pdf")
 
 rule getstrain:
     input:
@@ -86,10 +86,10 @@ rule summary:
         #currently has to be like this (ie not rules.output) otherwise the wildcards don't work
         individual_all_virustype_info = expand(os.path.join(config["tempdir"], "{sample}_all_virustype_info.txt"), sample=config["sample_list"])
     output:
-        serotype_calls = os.path.join(config["outdir"], "results", "virus_calls.tsv"),
-        all_serotype_summary = os.path.join(config["outdir"], "results", "summary_all_samples.tsv"),
-        top_serotype_summary = os.path.join(config["outdir"], "results", "top_virus_all_samples.tsv"),
-        variant_summary_file = os.path.join(config["outdir"], "results", "variants", "variants_summary.tsv")
+        serotype_calls = os.path.join(config["outdir"], "results/summary/", "virus_calls.tsv"),
+        all_serotype_summary = os.path.join(config["outdir"], "results/summary/", "summary_all_samples.tsv"),
+        top_serotype_summary = os.path.join(config["outdir"], "results/summary/", "top_virus_all_samples.tsv"),
+        variant_summary_file = os.path.join(config["outdir"], "results/summary/", "variants", "variants_summary.tsv")
     params:
         results_dir = os.path.join(config["outdir"], "results"),
         outdir = config["outdir"],
@@ -114,7 +114,7 @@ rule make_qc_plots:
         serotype_calls_file = rules.summary.output.serotype_calls,
         variant_summary_file = rules.summary.output.variant_summary_file
     output:
-        variant_plot = os.path.join(config["outdir"], "results", "variant_plot.pdf")
+        variant_plot = os.path.join(config["outdir"], "results/summary/", "variant_plot.pdf")
     params:
         results_dir = rules.summary.params.results_dir
     run:

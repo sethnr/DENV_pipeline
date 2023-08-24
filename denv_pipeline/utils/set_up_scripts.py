@@ -141,7 +141,7 @@ def make_folders(config):
     if not os.path.exists(out_dir):
         os.mkdir(out_dir)
         
-    if os.path.exists(os.path.join(out_dir, "results")) and not config["overwrite"]:
+    if os.path.exists(os.path.join(out_dir, "results/summary")) and not config["overwrite"]:
         sys.stderr.write(misc.green(f"Error: results files already exist at {out_dir}. Use --overwrite flag to delete and regenerate results.\n"))
         sys.exit(-1)
     else:
