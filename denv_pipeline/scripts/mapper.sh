@@ -28,8 +28,9 @@ while getopts "n:p:s:c:e:d:t:T:L:" OPTION; do
     esac
 done
 shift $(expr $OPTIND - 1 )
-set read1 = $1;
-set read2 = $2;
+
+read1=$1;
+read2=$2;
 
 if [ -z "$precalls" ]; then
     precalls = "${primer_dir}/refs.txt"} 
