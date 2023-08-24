@@ -37,13 +37,10 @@ rule getstrain:
         "{outdir}/log_files/getstrain_{sample}.log", 
     shell:
         """
-	pwd    ;
-	ls -la ;
-	ls {params.masher}
         {params.masher} -r {params.reads} \
                 -b {params.bloom} \
                 -g {params.gsize} \
-                {input.read_location} > {output.strain_calls}
+                {input.read_location} 1> {output.strain_calls} 2>{log}
         """
 
 rule mapper:
