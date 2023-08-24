@@ -120,7 +120,8 @@ def main(sysargs = sys.argv[1:]):
                                     )
         elif config["singularity"]:
             status = snakemake.snakemake(snakefile, printshellcmds=False, forceall=True, force_incomplete=True,
-                                    workdir=cwd,config=config,lock=False, use_singularity=True
+                                         workdir=cwd,config=config,lock=False, use_singularity=True,
+                                         singularity_args="-B {}/{}".format(thisdir,"scripts"),
                                     )
         else:
             status = snakemake.snakemake(snakefile, printshellcmds=False, forceall=True, force_incomplete=True,

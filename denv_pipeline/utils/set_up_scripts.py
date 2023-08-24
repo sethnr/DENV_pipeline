@@ -23,6 +23,7 @@ def get_defaults(config):
     config["verbose"] = False
     config["slurm"] = False
     config["slurm_cores"] = 10
+    config["singularity"] = False
     config["download"] = False
     config["temp"] = False
     config["overwrite"] = False
