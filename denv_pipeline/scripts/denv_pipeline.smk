@@ -74,7 +74,7 @@ rule mapper:
         shell("{params.mapper_script}  -c {input.mashcalls} \
                 -n {wildcards.sample} -p {params.primer_dir} -s {params.python_script} \
                 -e {params.python_script2} -d {params.depth} -t {params.threshold} \
-                -T {params.tempdir} -L {log.log} \
+                -C {resources.cpus_per_task} -T {params.tempdir} -L {log.log} \
                 {input.read_location}/*R1* {input.read_location}/*R2* \
                  >> {log.log} 2>&1")
         
