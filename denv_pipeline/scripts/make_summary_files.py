@@ -79,15 +79,17 @@ def sort_variant_files(config, serotypes):
                 writer = csv.DictWriter(fw, headers, delimiter="\t")
                 writer.writeheader()
 
-                with open(input_file) as f:
-                    data = csv.DictReader(f, delimiter="\t")
-                    for l in data: 
-                        write_dict = {}
-                        if l['PASS'] == "TRUE" and float(l['ALT_FREQ']) < 0.8 and float(l['ALT_FREQ']) > 0.2:
-                            for old,new in old_to_new.items():
-                                write_dict[new] = l[old]
-                            writer.writerow(write_dict)
-                            count += 1
+                #allow for missing alignment files if using mash calls
+                if os.path.exists(input_file): 
+                    with open(input_file) as f:
+                        data = csv.DictReader(f, delimiter="\t")
+                        for l in data: 
+                            write_dict = {}
+                            if l['PASS'] == "TRUE" and float(l['ALT_FREQ']) < 0.8 and float(l['ALT_FREQ']) > 0.2:
+                                for old,new in old_to_new.items():
+                                    write_dict[new] = l[old]
+                                writer.writerow(write_dict)
+                                count += 1
 
             if option in serotype_lst:
                 summary_file.write(f"{sample}\t{option}\t{count}\n")
@@ -133,7 +135,8 @@ def get_right_serotype_files(config, serotypes):
             depths.add(f'{sample}.{option}.depth.txt')
             variant_frequencies.add(f'{sample}.{option}.{depth}.variants_frequency.tsv')
 
-
+    ##allow for missing alignment files if using mash calls
+    #if os.path.exists(os.path.join(config['tempdir'], bam)): 
     for bam in bam_files:
         source = os.path.join(config['tempdir'], bam)
         dest = os.path.join(config["outdir"], "results", "bam_files")

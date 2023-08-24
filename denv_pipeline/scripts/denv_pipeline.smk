@@ -83,7 +83,7 @@ rule mapper:
 
 rule summary:
     input:
-    #have to be like this (ie not rules.output) otherwise the wildcards don't work
+        #currently has to be like this (ie not rules.output) otherwise the wildcards don't work
         individual_all_virustype_info = expand(os.path.join(config["tempdir"], "{sample}_all_virustype_info.txt"), sample=config["sample_list"])
     output:
         serotype_calls = os.path.join(config["outdir"], "results", "virus_calls.tsv"),
