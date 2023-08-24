@@ -34,7 +34,7 @@ def main(sysargs = sys.argv[1:]):
     parser.add_argument("--depth", help="depth to map sequences to. Default=10")
     parser.add_argument("--threshold", help="threshold to call consensus positions at, default=0.75",dest="threshold")
     
-    parser.add_argument("--temp", dest="temp", action="store_true", help="keep intermediate files")
+    parser.add_argument("--temp", dest="temp", action="store_true", help="keep intermediate files",default=False)
     parser.add_argument("--tempdir", dest="tempdir", help="where the temporary files go")
     parser.add_argument("--download", action="store_true", help="make a folder without bam files for download")
 
@@ -109,22 +109,22 @@ def main(sysargs = sys.argv[1:]):
    
     if not config["dry_run"]:
         if config["singularity"] and config["slurm"]:
-            status = snakemake.snakemake(snakefile, printshellcmds=False, forceall=True, force_incomplete=True,
+            status = snakemake.snakemake(snakefile, printshellcmds=False, forceall=True, force_incomplete=True,notemp=config['temp'],
                                     workdir=cwd,config=config,lock=False, slurm=True, cores=config["slurm_cores"],
                                          use_singularity=True,
                                          singularity_args="-B {}/{}".format(thisdir,"scripts"),
                                     )
         elif config["slurm"]:
-            status = snakemake.snakemake(snakefile, printshellcmds=False, forceall=True, force_incomplete=True,
+            status = snakemake.snakemake(snakefile, printshellcmds=False, forceall=True, force_incomplete=True,notemp=config['temp'],
                                     workdir=cwd,config=config,lock=False, slurm=True, cores=config["slurm_cores"]
                                     )
         elif config["singularity"]:
-            status = snakemake.snakemake(snakefile, printshellcmds=False, forceall=True, force_incomplete=True,
+            status = snakemake.snakemake(snakefile, printshellcmds=False, forceall=True, force_incomplete=True,notemp=config['temp'],
                                          workdir=cwd,config=config,lock=False, use_singularity=True,
                                          singularity_args="-B {}/{}".format(thisdir,"scripts"),
                                     )
         else:
-            status = snakemake.snakemake(snakefile, printshellcmds=False, forceall=True, force_incomplete=True,
+            status = snakemake.snakemake(snakefile, printshellcmds=False, forceall=True, force_incomplete=True,notemp=config['temp'],
                                     workdir=cwd,config=config,lock=False
                                     )
 
