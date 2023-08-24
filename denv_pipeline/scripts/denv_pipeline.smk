@@ -21,7 +21,8 @@ rule getstrain:
     input:
         read_location = os.path.join(config["indir"], "{sample}")
     output:
-        strain_calls = "{outdir}/results/{sample}_strain_match.tsv",
+        mashout = "{outdir}/results/mash/{sample}_mash.txt",
+        mashcalls = "{outdir}/results/mash/{sample}_calls.txt"
     resources:
         partition="day",
         mem_mb_per_cpu="8G",
@@ -31,10 +32,11 @@ rule getstrain:
     params:
         reads=10000, # compare top N reads to refs
         bloom=10,    # bloom filter kmers with < N coverage (seq errors)
-	gsize="11k", # estimated genome size (for prob assignment)
-	prob=1e-50,  # max mash prob to call
-	dist=0.25,   # max mash dist to call
-	masher = os.path.join(workflow.current_basedir,"masher.sh"),
+        gsize="11k", # estimated genome size (for prob assignment)
+        prob=1e-50,  # max mash prob to call
+        dist=0.25,   # max mash dist to call
+    	masher = os.path.join(workflow.current_basedir,"masher.sh"),
+        prefix="{outdir}/results/mash/{sample}"
     log: 
         "{outdir}/log_files/getstrain_{sample}.log", 
     shell:
@@ -42,7 +44,8 @@ rule getstrain:
         {params.masher} \
 		-r {params.reads} -b {params.bloom} -g {params.gsize} \
 		-d {params.dist} -p {params.prob} \
-                {input.read_location} 1> {output.strain_calls} 2>{log}
+        -o {params.prefix} \
+        {input.read_location} 1> {output.strain_calls} 2>{log}
         """
 
 rule mapper:
