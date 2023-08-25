@@ -6,15 +6,17 @@ DIST=0.5
 BLOOM=10
 GSIZE=11k
 PREFIX="outfile"
+MASHREF="DENV_all.msh"
 
-while getopts "p:d:b:r:g:T:o:" OPTION; do
+while getopts "f:p:d:b:r:g:T:o:" OPTION; do
     case $OPTION in
+    f) MASHREF=$OPTARG ;;
     p) PROB=$OPTARG    ;;
     d) DIST=$OPTARG    ;;
     r) READS=$OPTARG   ;;
     b) BLOOM=$OPTARG   ;;
     g) GSIZE=$OPTARG   ;;
-    o) PREFIX=$OPTARG   ;;
+    o) PREFIX=$OPTARG  ;;
     T) TEMPDIR=$OPTARG ;;
     *)  echo "option not recognised"
         exit 1
@@ -45,7 +47,7 @@ cat ${TEMPDIR}/*head.fastq >  ${TEMPDIR}/${READS}.fastq
 rm ${TEMPDIR}/*head.fastq
 
 echo "mashing ${READS} reads against hashes" >&2
-mash  dist  -m $BLOOM -r -g $GSIZE DENV_all.msh ${TEMPDIR}/${READS}.fastq > ${PREFIX}_mash.txt
+mash  dist  -m $BLOOM -r -g $GSIZE ${MASHREF} ${TEMPDIR}/${READS}.fastq > ${PREFIX}_mash.txt
 
 
 #filter for max prob / dist, print genome names

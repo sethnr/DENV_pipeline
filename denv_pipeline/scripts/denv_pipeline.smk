@@ -41,7 +41,7 @@ rule getstrain:
         "{outdir}/log_files/getstrain_{sample}.log", 
     shell:
         """
-        {params.masher} \
+        {params.masher} -f {params.refdir}/allrefs.msh \
 		-r {params.reads} -b {params.bloom} -g {params.gsize} \
 		-d {params.dist} -p {params.prob} \
         -o {params.prefix} \
