@@ -129,11 +129,6 @@ def get_right_serotype_files(config, serotypes):
     
     for sample, serotype_lst in serotypes.items():
         for option in serotype_lst:
-            sys.stderr.write(f'tx {sample}.{option}.sort.bam')
-            sys.stderr.write(f'tx {sample}.{option}.sort.bam.bai')
-            sys.stderr.write(f'tx {sample}.{option}.{depth}.cons.fa')
-            sys.stderr.write(f'tx {sample}.{option}.depth.txt')
-            sys.stderr.write(f'tx {sample}.{option}.{depth}.variants_frequency.txt')
             bam_files.add(f'{sample}.{option}.sort.bam')
             bam_indices.add(f'{sample}.{option}.sort.bam.bai')
             consensus.add(f'{sample}.{option}.{depth}.cons.fa')

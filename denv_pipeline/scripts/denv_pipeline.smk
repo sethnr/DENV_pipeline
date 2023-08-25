@@ -15,7 +15,7 @@ cwd = os.getcwd()
 rule all: 
     input:
         os.path.join(config["outdir"], "results/summary", "virus_calls.tsv"),
-        os.path.join(config["outdir"], "results/summary", "variant_plot.pdf")
+        os.path.join(config["outdir"], "results", "variant_plot.pdf")
 
 rule getstrain:
     input:
@@ -114,7 +114,7 @@ rule make_qc_plots:
         serotype_calls_file = rules.summary.output.serotype_calls,
         variant_summary_file = rules.summary.output.variant_summary_file
     output:
-        variant_plot = os.path.join(config["outdir"], "results/summary/", "variant_plot.pdf")
+        variant_plot = os.path.join(config["outdir"], "results", "variant_plot.pdf")
     params:
         results_dir = rules.summary.params.results_dir
     run:
