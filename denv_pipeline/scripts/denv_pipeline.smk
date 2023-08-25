@@ -25,7 +25,7 @@ rule getstrain:
         mashcalls = "{outdir}/results/mash/{sample}_calls.txt"
     resources:
         partition="day",
-        mem_mb="8G",
+        mem_mb_per_cpu="8G",
         cpus_per_task=1,
         runtime=300
     container: "docker://sethnr/pgcoe_anypipe:0.01"
@@ -66,7 +66,7 @@ rule mapper:
         python_script2 = os.path.join(workflow.current_basedir, "make_empty_files.py")
     resources:
         partition="day",
-        mem_mb="16G",
+        mem_mb_per_cpu="10G",
         cpus_per_task=4,
         runtime=300
     run:
