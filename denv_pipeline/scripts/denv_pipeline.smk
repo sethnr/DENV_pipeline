@@ -89,7 +89,7 @@ rule summary:
         serotype_calls = os.path.join(config["outdir"], "results/summary/", "virus_calls.tsv"),
         all_serotype_summary = os.path.join(config["outdir"], "results/summary/", "summary_all_samples.tsv"),
         top_serotype_summary = os.path.join(config["outdir"], "results/summary/", "top_virus_all_samples.tsv"),
-        variant_summary_file = os.path.join(config["outdir"], "results/summary/", "variants", "variants_summary.tsv")
+        variant_summary_file = os.path.join(config["outdir"], "results/summary/", "variants_summary.tsv")
     params:
         results_dir = os.path.join(config["outdir"], "results"),
         outdir = config["outdir"],
