@@ -3,6 +3,7 @@ import csv
 import argparse
 from collections import defaultdict
 import shutil
+import sys
 
 def summarise_files(config, per_sample_files, serotype_call_file, top_call_file, all_info_file):
 
