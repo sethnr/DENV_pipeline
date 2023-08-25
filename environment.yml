@@ -1,4 +1,4 @@
-name: analysis_env
+name: pathag
 channels:
   - conda-forge
   - bioconda
