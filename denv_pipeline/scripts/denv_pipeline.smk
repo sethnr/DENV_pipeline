@@ -25,7 +25,7 @@ rule getstrain:
         mashcalls = "{outdir}/results/mash/{sample}_calls.txt"
     resources:
         partition="day",
-        mem_mb_per_cpu="8G",
+        mem_mb="8G",
         cpus_per_task=1,
         runtime=300
     container: "docker://sethnr/pgcoe_anypipe:0.01"
@@ -36,7 +36,8 @@ rule getstrain:
         prob=1e-50,  # max mash prob to call
         dist=0.25,   # max mash dist to call
     	masher = os.path.join(workflow.current_basedir,"masher.sh"),
-        prefix="{outdir}/results/mash/{sample}"
+        prefix="{outdir}/results/mash/{sample}",
+	refdir=config["reference_directory"],
     log: 
         "{outdir}/log_files/getstrain_{sample}.log", 
     shell:
@@ -66,7 +67,7 @@ rule mapper:
         python_script2 = os.path.join(workflow.current_basedir, "make_empty_files.py")
     resources:
         partition="day",
-        mem_mb_per_cpu="10G",
+        mem_mb="40G",
         cpus_per_task=4,
         runtime=300
     run:
