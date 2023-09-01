@@ -7,8 +7,6 @@ from smkrunner.utils import misc
 #from pathag_pipeline.scripts import visualisations
 #from pathag_pipeline.scripts import make_summary_files
 
-#container: "docker://sethnr/pgcoe_anypipe:0.01"
-
 cwd = os.getcwd()
 
 rule all: 

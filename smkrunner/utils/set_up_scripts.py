@@ -32,7 +32,7 @@ def get_defaults(config):
 
     config["outdir"] = f'seq_analysis_{dt.datetime.today().date()}' 
 
-    config["reference_directory"] = pkg_resources.resource_filename('denv_pipeline', 'DENV_primers_and_refs')
+    config["reference_directory"] = pkg_resources.resource_filename('refgenomes', 'refs/DENV/')
 
     return config
 
