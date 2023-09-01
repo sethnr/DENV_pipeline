@@ -6,4 +6,4 @@ __all__ = [
     "scripts"
 ]
 
-from denv_pipeline import *
+from smkrunner import *
