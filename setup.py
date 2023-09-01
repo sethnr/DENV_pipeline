@@ -4,7 +4,7 @@ import glob
 import os
 import pkg_resources
 
-from piperunner import __version__, _program
+from smkrunner import __version__, _program
 
 setup(name='pathag_pipeline',
       version=__version__,
