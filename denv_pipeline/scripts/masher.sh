@@ -30,7 +30,7 @@ TEMPDIR=`mktemp -d`;
 sleep 1 
 
 if [[ ! "$TEMPDIR" || ! -d "$TEMPDIR" ]]; then
-    echo "!!!!!"
+    echo $TEMPDIR not found
     exit 1
 fi
 
@@ -51,6 +51,11 @@ mash  dist  -m $BLOOM -r -g $GSIZE ${MASHREF} ${TEMPDIR}/${READS}.fastq > ${PREF
 
 
 #filter for max prob / dist, print genome names
-#awk -v dist=$DIST -v prob=$PROB '($3 + $dist+0 < 0.5 && $4 < $prob+0) {print gensub(".fasta","","g",$1);}' ${PREFIX}_mash.txt > ${PREFIX}_calls.txt
+echo "pulling matches below ${DIST} / ${PROB}" >&2
 awk -v dist=$DIST -v prob=$PROB '($3+0 < dist+0 && $4+0 < prob+0) {sub(".fasta","",$1); print $1}' ${PREFIX}_mash.txt > ${PREFIX}_calls.txt
-#rm -r ${TEMPDIR}
+
+
+echo "rm ${TEMPDIR}" >&2
+rm -r ${TEMPDIR}
+
+echo "fin" >&2

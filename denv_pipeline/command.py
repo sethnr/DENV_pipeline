@@ -25,19 +25,25 @@ def main(sysargs = sys.argv[1:]):
     parser = argparse.ArgumentParser(add_help=False, description=misc.header(__version__))
 
     parser.add_argument("--config", help="config file containing all relevant arguments")
-    parser.add_argument("--dry-run", dest="dry_run", action="store_true", help="do all error checks and make files but don't run the pipeline.")
-
+    
     parser.add_argument("--symlink", dest="symlink", help="argument for generating symlinks")
     parser.add_argument("--indir", help="directory containing samples. Each sample must be a folder with the forward and reverse runs in. Default is same as output directory")
     parser.add_argument("--outdir", dest="outdir", help="location where files will be stored.")
     parser.add_argument("--reference-directory", "-rd", help="location where bed files and reference genomes are")
     parser.add_argument("--depth", help="depth to map sequences to. Default=10")
     parser.add_argument("--threshold", help="threshold to call consensus positions at, default=0.75",dest="threshold")
+
+    parser.add_argument("--ct-file",dest="ct_file", help="to produce a plot of Ct against coverage, provide a csv file containing Ct information by sample")
+    parser.add_argument("--ct-column", dest="ct_column", help="Name of Ct column in Ct file for plot")
+    parser.add_argument("--id-column", dest="id_column", help="Name of ID column in Ct file to make Ct plot")
+
     
     parser.add_argument("--temp", dest="temp", action="store_true", help="keep intermediate files",default=False)
     parser.add_argument("--tempdir", dest="tempdir", help="where the temporary files go")
     parser.add_argument("--download", action="store_true", help="make a folder without bam files for download")
 
+    #snakemake arguments:
+    parser.add_argument("--dry-run", dest="dry_run", action="store_true", help="do all error checks and make files but don't run the pipeline.")
     parser.add_argument("--slurm", help="flag for if running on HPC with slurm", action="store_true")
     parser.add_argument("--slurm-cores", help="number of slurm cores to assign. Default is 10", dest="slurm_cores", type=int)
     parser.add_argument("--singularity", help="flag for running on HPC with apptainer / singularity", action="store_true")
@@ -45,9 +51,6 @@ def main(sysargs = sys.argv[1:]):
     parser.add_argument("--help", "-h", action="store_true", dest="help")
     parser.add_argument("--overwrite", help="overwrite current results", action="store_true", default=False)
 
-    parser.add_argument("--ct-file",dest="ct_file", help="to produce a plot of Ct against coverage, provide a csv file containing Ct information by sample")
-    parser.add_argument("--ct-column", dest="ct_column", help="Name of Ct column in Ct file for plot")
-    parser.add_argument("--id-column", dest="id_column", help="Name of ID column in Ct file to make Ct plot")
 
     if len(sysargs)<1: 
         parser.print_help()
