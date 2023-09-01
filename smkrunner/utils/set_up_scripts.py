@@ -5,8 +5,8 @@ import pkg_resources
 import yaml
 import datetime as dt
 
-from denv_pipeline.utils import misc
-from denv_pipeline.utils import error_checks
+from smkrunner.utils import misc
+from smkrunner.utils import error_checks
 
 def get_defaults(config):
        
@@ -162,7 +162,7 @@ def set_up_reference_directory(config):
 
     reference_directory = config["reference_directory"]
 
-    if reference_directory != pkg_resources.resource_filename('denv_pipeline', 'DENV_primers_and_refs'):
+    if reference_directory != pkg_resources.resource_filename('smkrunner', 'DENV_primers_and_refs'):
         config['reference_directory'] = reference_directory.rstrip("/")
         error_checks.check_primer_dir(config)
         

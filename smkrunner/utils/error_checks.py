@@ -5,8 +5,8 @@ import pkgutil
 import re
 import yaml
 
-from denv_pipeline.utils.misc import *
-from denv_pipeline.utils import set_up_scripts
+from smkrunner.utils.misc import *
+from smkrunner.utils import set_up_scripts
 
 def check_configfile(cwd,config_arg):
     
