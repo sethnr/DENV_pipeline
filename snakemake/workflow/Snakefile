@@ -3,9 +3,9 @@ import sys
 import datetime as dt
 import shutil
 
-from pathag_pipeline.utils import misc
-from pathag_pipeline.scripts import visualisations
-from pathag_pipeline.scripts import make_summary_files
+from smkrunner.utils import misc
+#from pathag_pipeline.scripts import visualisations
+#from pathag_pipeline.scripts import make_summary_files
 
 #container: "docker://sethnr/pgcoe_anypipe:0.01"
 
@@ -53,17 +53,13 @@ rule mapper:
         read_location = os.path.join(config["indir"], "{sample}"),
         mashcalls = os.path.join(config["outdir"],"results/mash/{sample}_calls.txt")
     output:
-        individual_all_virustype_info = temp(os.path.join(config["tempdir"], "{sample}_all_virustype_info.txt"))
+        bam = temp(os.path.join(config["tempdir"], "{sample}_all_virustype_info.txt"))
     log:
         log = os.path.join(config["outdir"], "log_files", "_".join(["{sample}", "mapping.log"]))
     params:
         mapper_script = os.path.join(workflow.current_basedir,"mapper.sh"),
         primer_dir = config["reference_directory"],
-        depth = config["depth"],
-        threshold = config["threshold"],
         tempdir = config["tempdir"],
-        python_script = os.path.join(workflow.current_basedir,"serotype_caller.py"),
-        python_script2 = os.path.join(workflow.current_basedir, "make_empty_files.py")
     resources:
         partition="day",
         mem_mb="40G",
@@ -82,6 +78,42 @@ rule mapper:
             touch {params.tempdir}/{wildcards.sample}_all_virustype_info.txt
 	fi
 	    """
+
+
+rule caller:
+    input:
+        bams = os.path.join(config["indir"], "{sample}"),
+        mashcalls = os.path.join(config["outdir"],"results/mash/{sample}_calls.txt")
+    output:
+        individual_all_virustype_info = temp(os.path.join(config["tempdir"], "{sample}_all_virustype_info.txt"))
+    log:
+        log = os.path.join(config["outdir"], "log_files", "_".join(["{sample}", "mapping.log"]))
+    params:
+        caller_script = os.path.join(workflow.current_basedir,"caller.sh"),
+        depth = config["depth"],
+        threshold = config["threshold"],
+        tempdir = config["tempdir"],
+        python_script = os.path.join(workflow.current_basedir,"serotype_caller.py"),
+        python_script2 = os.path.join(workflow.current_basedir, "make_empty_files.py")
+    resources:
+        partition="day",
+        mem_mb="40G",
+        cpus_per_task=4,
+        runtime=300
+    container: "docker://sethnr/pgcoe_anypipe:0.01"
+    shell:"""
+	{params.caller_script}  -c {input.mashcalls} \
+                -n {wildcards.sample} -p {params.primer_dir} -s {params.python_script} \
+                -e {params.python_script2} -d {params.depth} -t {params.threshold} \
+                -C {resources.cpus_per_task} -T {params.tempdir} -L {log.log} \
+                {input.read_location}/*R1* {input.read_location}/*R2* \
+                 >> {log.log} 2>&1
+        
+        if ! [-f "{params.tempdir}/{wildcards.sample}_all_virustype_info.txt"]; then 
+            touch {params.tempdir}/{wildcards.sample}_all_virustype_info.txt
+	fi
+	    """
+
 
 rule summary:
     input:
