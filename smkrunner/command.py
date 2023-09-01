@@ -30,6 +30,7 @@ def main(sysargs = sys.argv[1:]):
     parser.add_argument("--indir", help="directory containing samples. Each sample must be a folder with the forward and reverse runs in. Default is same as output directory")
     parser.add_argument("--outdir", dest="outdir", help="location where files will be stored.")
     parser.add_argument("--reference-directory", "-rd", help="location where bed files and reference genomes are")
+    parser.add_argument("--workflow-directory", "-wd", help="location where snakemake workflow is")
     parser.add_argument("--depth", help="depth to map sequences to. Default=10")
     parser.add_argument("--threshold", help="threshold to call consensus positions at, default=0.75",dest="threshold")
 
@@ -100,7 +101,12 @@ def main(sysargs = sys.argv[1:]):
 
     set_up_scripts.output_config(config)
 
-    snakefile = os.path.join(thisdir,"scripts", "denv_pipeline.smk")
+    #set location of scripts and snakemake file
+    smkdir = config["workflow_directory"]
+    scriptsdir = os.path.join(smkdir,"scripts")
+    snakefile = os.path.join(smkdir,"workflow", "Snakefile")
+    
+
     if config['verbose'] or config["dry_run"]:
         print("\n**** CONFIG ****")
         for k in sorted(config):
@@ -116,7 +122,7 @@ def main(sysargs = sys.argv[1:]):
             status = snakemake.snakemake(snakefile, printshellcmds=False, forceall=config["overwrite"], force_incomplete=True,notemp=config['temp'],
                                     workdir=cwd,config=config,lock=False, slurm=True, cores=config["slurm_cores"],
                                          use_singularity=True,
-                                         singularity_args="-B {}/{}".format(thisdir,"scripts"),
+                                         singularity_args="-B {}/{}".format(scriptsdir,"scripts"),
                                     )
         elif config["slurm"]:
             status = snakemake.snakemake(snakefile, printshellcmds=False, forceall=config["overwrite"], force_incomplete=True,notemp=config['temp'],
@@ -125,7 +131,7 @@ def main(sysargs = sys.argv[1:]):
         elif config["singularity"]:
             status = snakemake.snakemake(snakefile, printshellcmds=False, forceall=config["overwrite"], force_incomplete=True,notemp=config['temp'],
                                          workdir=cwd,config=config,lock=False, use_singularity=True,
-                                         singularity_args="-B {}/{}".format(thisdir,"scripts"),
+                                         singularity_args="-B {}/{}".format(scriptsdir,"scripts"),
                                     )
         else:
             status = snakemake.snakemake(snakefile, printshellcmds=False, forceall=config["overwrite"], force_incomplete=True,notemp=config['temp'],
