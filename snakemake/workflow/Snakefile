@@ -1,14 +1,13 @@
-#container: "docker://sethnr/pgcoe_anypipe:0.01"
-
 import os
 import sys
 import datetime as dt
 import shutil
 
-from denv_pipeline.utils import misc
-from denv_pipeline.scripts import visualisations
-from denv_pipeline.scripts import make_summary_files
+from pathag_pipeline.utils import misc
+from pathag_pipeline.scripts import visualisations
+from pathag_pipeline.scripts import make_summary_files
 
+#container: "docker://sethnr/pgcoe_anypipe:0.01"
 
 cwd = os.getcwd()
 
@@ -71,7 +70,7 @@ rule mapper:
         cpus_per_task=4,
         runtime=300
     container: "docker://sethnr/pgcoe_anypipe:0.01"
-    shell: """
+    shell:"""
 	{params.mapper_script}  -c {input.mashcalls} \
                 -n {wildcards.sample} -p {params.primer_dir} -s {params.python_script} \
                 -e {params.python_script2} -d {params.depth} -t {params.threshold} \
