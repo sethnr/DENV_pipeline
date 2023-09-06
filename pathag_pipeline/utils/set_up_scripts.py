@@ -5,8 +5,8 @@ import pkg_resources
 import yaml
 import datetime as dt
 
-from smkrunner.utils import misc
-from smkrunner.utils import error_checks
+from pathag_pipeline.utils import misc
+from pathag_pipeline.utils import error_checks
 
 def get_defaults(config):
        
@@ -32,8 +32,8 @@ def get_defaults(config):
 
     config["outdir"] = f'seq_analysis_{dt.datetime.today().date()}' 
 
-    config["reference_directory"] = pkg_resources.resource_filename('pathag_pipeline', 'refs/DENV/')
-    config["workflow_directory"] = pkg_resources.resource_filename('pathag_pipeline', './snakemake/')
+    config["reference_directory"] = pkg_resources.resource_filename('smkrunner', 'refs/DENV/')
+    config["workflow_directory"] = pkg_resources.resource_filename('smkrunner', './snakemake/')
 
     return config
 

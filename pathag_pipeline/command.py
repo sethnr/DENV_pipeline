@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
-from smkrunner import __version__
+from pathag_pipeline import __version__
 
-from smkrunner.utils import misc
-from smkrunner.utils import error_checks
-from smkrunner.utils import set_up_scripts
+from pathag_pipeline.utils import misc
+from pathag_pipeline.utils import error_checks
+from pathag_pipeline.utils import set_up_scripts
 import pkg_resources
 import os
 import sys
