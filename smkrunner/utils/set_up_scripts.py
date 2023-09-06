@@ -32,8 +32,8 @@ def get_defaults(config):
 
     config["outdir"] = f'seq_analysis_{dt.datetime.today().date()}' 
 
-    config["reference_directory"] = pkg_resources.resource_filename('refgenomes', 'refs/DENV/')
-    config["workflow_directory"] = pkg_resources.resource_filename('snakemake', './snakemake/')
+    config["reference_directory"] = pkg_resources.resource_filename('pathag_pipeline', 'refs/DENV/')
+    config["workflow_directory"] = pkg_resources.resource_filename('pathag_pipeline', './snakemake/')
 
     return config
 
