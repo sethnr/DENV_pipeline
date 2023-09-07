@@ -32,8 +32,8 @@ def get_defaults(config):
 
     config["outdir"] = f'seq_analysis_{dt.datetime.today().date()}' 
 
-    config["reference_directory"] = pkg_resources.resource_filename('smkrunner', 'refs/DENV/')
-    config["workflow_directory"] = pkg_resources.resource_filename('smkrunner', './snakemake/')
+    config["reference_directory"] = pkg_resources.resource_filename('pathag_pipeline', './refs/DENV/')
+    config["workflow_directory"] = pkg_resources.resource_filename('pathag_pipeline', './snakemake/')
 
     return config
 
@@ -163,7 +163,7 @@ def set_up_reference_directory(config):
 
     reference_directory = config["reference_directory"]
 
-    if reference_directory != pkg_resources.resource_filename('smkrunner', 'DENV_primers_and_refs'):
+    if reference_directory != pkg_resources.resource_filename('pathag_pipeline', './refs/DENV/'):
         config['reference_directory'] = reference_directory.rstrip("/")
         error_checks.check_primer_dir(config)
         

@@ -3,11 +3,18 @@ import sys
 import datetime as dt
 import shutil
 
-from smkrunner.utils import misc
+from pathag_pipeline.utils import misc
 #from pathag_pipeline.scripts import visualisations
 #from pathag_pipeline.scripts import make_summary_files
 
 cwd = os.getcwd()
+
+wildcard_constraints:
+    indir={config["indir"]},
+    tmpdir={config["tmpdir"]},
+    outdir={config["outdir"]}
+    
+
 
 rule all: 
     input:
@@ -44,14 +51,16 @@ rule getstrain:
 		-d {params.dist} -p {params.prob} \
         -o {params.prefix} \
         {input.read_location}  2>{log}
+
         """
 
 rule mapper:
     input:
         read_location = os.path.join(config["indir"], "{sample}"),
-        mashcalls = os.path.join(config["outdir"],"results/mash/{sample}_calls.txt")
+        mashcalls = "{outdir}/results/mash/{sample}_calls.txt")
     output:
-        bam = temp(os.path.join(config["tempdir"], "{sample}_all_virustype_info.txt"))
+	#bams = os.path.join(config["tmpdir"], "{sample}_{target}.bam"),
+	bams = expand("{{tmpdir}}/bams/{{sample}}_{target}.bam",target=TARGETS)
     log:
         log = os.path.join(config["outdir"], "log_files", "_".join(["{sample}", "mapping.log"]))
     params:
@@ -71,21 +80,17 @@ rule mapper:
                 -C {resources.cpus_per_task} -T {params.tempdir} -L {log.log} \
                 {input.read_location}/*R1* {input.read_location}/*R2* \
                  >> {log.log} 2>&1
-        
-        if ! [-f "{params.tempdir}/{wildcards.sample}_all_virustype_info.txt"]; then 
-            touch {params.tempdir}/{wildcards.sample}_all_virustype_info.txt
-	fi
 	    """
 
 
 rule caller:
     input:
-        bams = os.path.join(config["indir"], "{sample}"),
-        mashcalls = os.path.join(config["outdir"],"results/mash/{sample}_calls.txt")
+        bams = os.path.join(config["indir"], "{sample}_{target}.bam"),
+        mashcalls = "{outdir}/results/mash/{sample}_calls.txt"
     output:
-        individual_all_virustype_info = temp(os.path.join(config["tempdir"], "{sample}_all_virustype_info.txt"))
+        individual_all_virustype_info = {outdir}/{sample}_all_virustype_info.txt"
     log:
-        log = os.path.join(config["outdir"], "log_files", "_".join(["{sample}", "mapping.log"]))
+        log = "{outdir}/log_files/{sample}_mapping.log"
     params:
         caller_script = os.path.join(workflow.current_basedir,"caller.sh"),
         depth = config["depth"],
@@ -118,14 +123,12 @@ rule summary:
         #currently has to be like this (ie not rules.output) otherwise the wildcards don't work
         individual_all_virustype_info = expand(os.path.join(config["tempdir"], "{sample}_all_virustype_info.txt"), sample=config["sample_list"])
     output:
-        serotype_calls = os.path.join(config["outdir"], "results/summary/", "virus_calls.tsv"),
-        all_serotype_summary = os.path.join(config["outdir"], "results/summary/", "summary_all_samples.tsv"),
-        top_serotype_summary = os.path.join(config["outdir"], "results/summary/", "top_virus_all_samples.tsv"),
-        variant_summary_file = os.path.join(config["outdir"], "results/summary/", "variants_summary.tsv")
+        serotype_calls = "{outdir}/results/summary/virus_calls.tsv",
+        all_serotype_summary = "{outdir}/results/summary/summary_all_samples.tsv",
+        top_serotype_summary = "{outdir}/results/summary/top_virus_all_samples.tsv",
+        variant_summary_file = "{outdir}/results/summary/variants_summary.tsv"
     params:
-        results_dir = os.path.join(config["outdir"], "results"),
-        outdir = config["outdir"],
-        tempdir = config["tempdir"],
+        results_dir = "{outdir}/results",
         python_script = os.path.join(workflow.current_basedir,"make_summary_files.py")
     run:        
         print("summarising files")
