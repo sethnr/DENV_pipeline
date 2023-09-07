@@ -57,7 +57,7 @@ rule getstrain:
 rule mapper:
     input:
         read_location = os.path.join(config["indir"], "{sample}"),
-        mashcalls = "{outdir}/results/mash/{sample}_calls.txt")
+        mashcalls = "{outdir}/results/mash/{sample}_calls.txt"
     output:
 	#bams = os.path.join(config["tmpdir"], "{sample}_{target}.bam"),
 	bams = expand("{{tmpdir}}/bams/{{sample}}_{target}.bam",target=TARGETS)
