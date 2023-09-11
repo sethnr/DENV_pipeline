@@ -122,7 +122,7 @@ def main(sysargs = sys.argv[1:]):
             status = snakemake.snakemake(snakefile, printshellcmds=False, forceall=config["overwrite"], force_incomplete=True,notemp=config['temp'],
                                     workdir=cwd,config=config,lock=False, slurm=True, cores=config["slurm_cores"],
                                          use_singularity=True,
-                                         singularity_args="-B {}/{}".format(scriptsdir,"scripts"),
+                                         singularity_args="-B {}:{}".format(scriptsdir,scriptsdir),
                                     )
         elif config["slurm"]:
             status = snakemake.snakemake(snakefile, printshellcmds=False, forceall=config["overwrite"], force_incomplete=True,notemp=config['temp'],
@@ -131,7 +131,7 @@ def main(sysargs = sys.argv[1:]):
         elif config["singularity"]:
             status = snakemake.snakemake(snakefile, printshellcmds=False, forceall=config["overwrite"], force_incomplete=True,notemp=config['temp'],
                                          workdir=cwd,config=config,lock=False, use_singularity=True,
-                                         singularity_args="-B {}/{}".format(scriptsdir,"scripts"),
+                                         singularity_args="-B {}:{}".format(scriptsdir,scriptsdir),
                                     )
         else:
             status = snakemake.snakemake(snakefile, printshellcmds=False, forceall=config["overwrite"], force_incomplete=True,notemp=config['temp'],

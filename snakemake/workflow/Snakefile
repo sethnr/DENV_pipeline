@@ -12,7 +12,8 @@ cwd = os.getcwd()
 wildcard_constraints:
     indir=config["indir"],
     tmpdir=config["tempdir"],
-    outdir=config["outdir"]
+    outdir=config["outdir"],
+    sample="\w+"
     
 TARGETS = [line.strip() for line in open("{refdir}/refs.txt".format(refdir=config['reference_directory']), 'r')]
 
@@ -21,7 +22,7 @@ rule all:
         os.path.join(config["outdir"], "results/summary", "virus_calls.tsv"),
         os.path.join(config["outdir"], "results", "variant_plot.pdf")
 
-rule getstrain:
+checkpoint callstrain:
     input:
         read_location = os.path.join(config["indir"], "{sample}")
     output:
@@ -54,18 +55,31 @@ rule getstrain:
 
         """
 
+
+def get_sample_strains(wildcards):
+    with checkpoints.callstrain.get(sample=wildcards.sample,outdir=wildcards.outdir).output.mashcalls.open() as f:
+        mytargets = f.read().splitlines()
+    return mytargets
+
+def get_sample_bams(wildcards):
+    mytargets = get_sample_strains(wildcards)
+    return expand(os.path.join(wildcards.outdir,"bams","{sample}_{target}.bam",sample=wildcards.sample,target=mytargets))
+    
 rule mapper:
     input:
         read_location = os.path.join(config["indir"], "{sample}"),
-        mashcalls = "{outdir}/results/mash/{sample}_calls.txt"
+        mashcalls = "{outdir}/results/mash/{sample}_calls.txt",
+	fasta = os.path.join(config["reference_directory"],"{target}.fasta")
     output:
         #bams = os.path.join(config["tmpdir"], "{sample}_{target}.bam"),
-        bams = expand("{{outdir}}/bams/{{sample}}_{target}.bam",target=TARGETS)
+        #bams = expand("{{outdir}}/bams/{{sample}}_{target}.bam",target=TARGETS)
+        bam = "{outdir}/bams/{sample}.{target}.bam"
     log:
-        log = os.path.join("{outdir}", "log_files", "_".join(["{sample}", "mapping.log"]))
+        log = os.path.join("{outdir}", "log_files", "_".join(["{sample}","{target}", "mapping.log"]))
     params:
         mapper_script = os.path.join(config['workflow_directory'],"scripts","mapper.sh"),
         primer_dir = config["reference_directory"],
+	tmpdir=os.path.join(config["outdir"], "bams"),
     resources:
         partition="day",
         mem_mb="40G",
@@ -73,10 +87,9 @@ rule mapper:
         runtime=300
     container: "docker://sethnr/pgcoe_anypipe:0.01"
     shell:"""
-	{params.mapper_script}  -c {input.mashcalls} \
-                -n {wildcards.sample} -p {params.primer_dir} -s {params.python_script} \
-                -e {params.python_script2} -d {params.depth} -t {params.threshold} \
-                -C {resources.cpus_per_task} -T {tmpdir} -L {log.log} \
+	{params.mapper_script}  -c {input.mashcalls} -t {wildcards.target} \
+                -n {wildcards.sample} -p {params.primer_dir}  \
+                -C {resources.cpus_per_task} -T {params.tmpdir} -L {log.log} \
                 {input.read_location}/*R1* {input.read_location}/*R2* \
                  >> {log.log} 2>&1
 	    """
@@ -84,7 +97,10 @@ rule mapper:
 
 rule caller:
     input:
-        bams = expand("{{outdir}}/bams/{{sample}}_{target}.bam",target=TARGETS),
+        #bams = expand("{{outdir}}/bams/{{sample}}_{target}.bam",target=TARGETS),
+        #bams = dynamic("{outdir}/bams/{sample}_{target}.bam"),
+        #bams = get_sample_strains,
+        bams = lambda wildcards: expand(os.path.join(wildcards.outdir,"bams","{{sample}}.{target}.bam"),target=get_sample_strains(wildcards)),
         mashcalls = "{outdir}/results/mash/{sample}_calls.txt"
     output:
         individual_all_virustype_info = "{outdir}/{sample}_all_virustype_info.txt"
@@ -95,6 +111,7 @@ rule caller:
         depth = config["depth"],
         threshold = config["threshold"],
         tempdir = config["tempdir"],
+        primer_dir = config["reference_directory"],
         python_script = os.path.join(config['workflow_directory'],"serotype_caller.py"),
         python_script2 = os.path.join(config['workflow_directory'], "make_empty_files.py")
     resources:
@@ -108,7 +125,6 @@ rule caller:
                 -n {wildcards.sample} -p {params.primer_dir} -s {params.python_script} \
                 -e {params.python_script2} -d {params.depth} -t {params.threshold} \
                 -C {resources.cpus_per_task} -T {params.tempdir} -L {log.log} \
-                {input.read_location}/*R1* {input.read_location}/*R2* \
                  >> {log.log} 2>&1
         
         if ! [-f "{params.tempdir}/{wildcards.sample}_all_virustype_info.txt"]; then 

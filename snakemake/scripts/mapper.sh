@@ -11,12 +11,13 @@
 # tempdir=$9
 # log=$10
 cores=1
-while getopts "n:p:s:c:e:d:t:C:T:L:" OPTION; do
+while getopts "n:p:s:c:t:e:d:t:C:T:L:" OPTION; do
     case $OPTION in
     n) fname=$OPTARG    ;;
     p) primer_dir=$OPTARG   ;;
     s) serotype_caller=$OPTARG   ;;
     c) precalls=$OPTARG ;;
+    t) virustype=$OPTARG ;;
     e) empty_file_maker=$OPTARG   ;;
     
     C) cores=$OPTARG ;;
@@ -32,12 +33,25 @@ shift $(expr $OPTIND - 1 )
 read1=$1;
 read2=$2;
 
+echo $read1
+echo $read2
+echo $virustype
+
 if [ -z "$precalls" ]; then
     precalls = "${primer_dir}/refs.txt"} 
 fi
 
+				   
 
-while IFS= read -r virustype || [[ -n "$virustype" ]]; do 
+if [ -z "$virustype" ]; then
+    echo "no value given for target" 1>&2
+    exit 1
+else
+    echo """mapping:
+  ${read1}
+  ${read2}
+  --> ${primer_dir}/${virustype}.fasta
+"""1>&2
 
     fasta=${primer_dir}/${virustype}.fasta
     bed=${primer_dir}/${virustype}.bed
@@ -68,6 +82,5 @@ while IFS= read -r virustype || [[ -n "$virustype" ]]; do
     echo "----->>>>>Indexing bam file"
     samtools index -@ ${cores} ${tempdir}/${fname}.${virustype}.sort.bam >> ${log} 2>&1
 
-    echo "--->>>>> Mapping Complete"
-
-done < $precalls
+    echo "--->>>>> Mapping Complete ${fname} ${virustype}"
+fi
