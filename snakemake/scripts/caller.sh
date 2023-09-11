@@ -47,6 +47,7 @@ while IFS= read -r virustype || [[ -n "$virustype" ]]; do
     echo "----->>>>>Calling variants against "${virustype}" reference sequence"
 
     echo "----->>>>>Generating consensus sequence"
+    mkdir ${outdir}/consensus/
     samtools mpileup -aa --reference ${fasta} -A -d 10000 -Q 0 ${indir}/${fname}.${virustype}.sort.bam | ivar consensus -t ${threshold} -m ${depth} -p ${outdir}/consensus/${fname}.${virustype}.cons -i ${consensus_name} >> ${log} 2>&1
     
     echo "----->>>>>Aligning consensus cps sequence against the reference serotype "${virustype}" cps sequence"
