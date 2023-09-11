@@ -105,7 +105,7 @@ rule caller:
         bams = lambda wildcards: expand(os.path.join(wildcards.outdir,"results","bams","{{sample}}.{target}.bam"),target=get_sample_strains(wildcards)),
         mashcalls = "{outdir}/results/mash/{sample}_calls.txt"
     output:
-        individual_all_virustype_info = "{outdir}/results/aligns/{sample}_all_virustype_info.txt"
+        individual_all_virustype_info = "{outdir}/results/align/{sample}_all_virustype_info.txt"
     log:
         log = "{outdir}/log_files/{sample}_mapping.log"
     params:
@@ -139,7 +139,7 @@ rule caller:
 
 rule summary:
     input:
-        individual_all_virustype_info = expand(os.path.join("{{outdir}}","results","aligns", "{sample}_all_virustype_info.txt"), sample=config["sample_list"])
+        individual_all_virustype_info = expand(os.path.join("{{outdir}}","results","align", "{sample}_all_virustype_info.txt"), sample=config["sample_list"])
     output:
         serotype_calls = "{outdir}/results/summary/virus_calls.tsv",
         all_serotype_summary = "{outdir}/results/summary/summary_all_samples.tsv",
