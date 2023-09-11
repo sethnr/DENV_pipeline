@@ -63,12 +63,12 @@ def summarise_files(config, per_sample_files, serotype_call_file, top_call_file,
 def sort_variant_files(config, serotypes):
 
     alignment_dir = os.path.join(config["outdir"], "results", "aligns")
-    summary_dir = os.path.join(config["outdir"], "results", "summary")
+    variants_dir = os.path.join(config["outdir"], "results", "variants")
     
-    old_to_new = {'POS': 'position', 'REF': 'reference_base', 'ALT': 'alternative_base', 'REF_DP': 'reference_depth', 'REF_RV': 'reference_depth_reverse', 'REF_QUAL': 'reference_quality', 'ALT_DP': 'alternate_depth', 'ALT_RV': 'alternate_depth_reverse', 'ALT_QUAL': 'alternative_quality', 'ALT_FREQ': 'alternative_frequency', 'TOTAL_DP': 'total_depth', 'PVAL': 'p_value_fisher', 'PASS': 'pass', 'GFF_FEATURE': 'gff_feature', 'REF_CODON': 'reference_codon', 'REF_AA': 'reference_amino_acid', 'ALT_CODON': 'alternative_codon', 'ALT_AA': 'alternative_amino_acid'}
-
     summary_file = open(os.path.join(config["outdir"], "results", "summary", "variants_summary.tsv"), 'w')
     summary_file.write("sample_id\tserotype\tvariant_count\n")
+
+    old_to_new = {'POS': 'position', 'REF': 'reference_base', 'ALT': 'alternative_base', 'REF_DP': 'reference_depth', 'REF_RV': 'reference_depth_reverse', 'REF_QUAL': 'reference_quality', 'ALT_DP': 'alternate_depth', 'ALT_RV': 'alternate_depth_reverse', 'ALT_QUAL': 'alternative_quality', 'ALT_FREQ': 'alternative_frequency', 'TOTAL_DP': 'total_depth', 'PVAL': 'p_value_fisher', 'PASS': 'pass', 'GFF_FEATURE': 'gff_feature', 'REF_CODON': 'reference_codon', 'REF_AA': 'reference_amino_acid', 'ALT_CODON': 'alternative_codon', 'ALT_AA': 'alternative_amino_acid'}
 
     full_virus_type_list = config["virus_type_list"]
     depth = config["depth"]
@@ -77,7 +77,7 @@ def sort_variant_files(config, serotypes):
             #input_file = os.path.join(config["tempdir"], f"{sample}.{option}.{depth}.variants.tsv")
             #output_file = os.path.join(config["tempdir"], f"{sample}.{option}.{depth}.variants_frequency.tsv")
             input_file  = os.path.join(alignment_dir, f"{sample}.{option}.variants.tsv")
-            output_file = os.path.join(summary_dir, f"{sample}.{option}.variants_frequency.tsv")
+            output_file = os.path.join(variants_dir, f"{sample}.{option}.variants_frequency.tsv")
 
             count = 0
             with open(output_file, 'w') as fw:
