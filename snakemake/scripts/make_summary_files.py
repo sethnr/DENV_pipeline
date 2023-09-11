@@ -170,8 +170,8 @@ def get_right_serotype_files(config, serotypes):
 
 def make_alignments(config, serotypes):
 
-    summary_dir = os.path.join(config["outdir"], "results", "aligns")
-    align_dir = os.path.join(config["outdir"], "results", "summary")
+    align_dir = os.path.join(config["outdir"], "results", "aligns")
+    summary_dir = os.path.join(config["outdir"], "results", "summary")
     depth = config["depth"]
     full_virus_type_list = config["virus_type_list"]
     
