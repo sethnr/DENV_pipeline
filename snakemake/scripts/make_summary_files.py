@@ -76,7 +76,7 @@ def sort_variant_files(config, serotypes):
         for option in full_virus_type_list:
             #input_file = os.path.join(config["tempdir"], f"{sample}.{option}.{depth}.variants.tsv")
             #output_file = os.path.join(config["tempdir"], f"{sample}.{option}.{depth}.variants_frequency.tsv")
-            input_file  = os.path.join(alignment_dir, f"{sample}.{option}.variants.tsv")
+            input_file  = os.path.join(variants_dir, f"{sample}.{option}.variants.tsv")
             output_file = os.path.join(variants_dir, f"{sample}.{option}.variants_frequency.tsv")
 
             count = 0
@@ -122,50 +122,50 @@ def clean_depth_file(config, depth_file):
     return new_depth_file
 
     
-def get_right_serotype_files(config, serotypes):
+# def get_right_serotype_files(config, serotypes):
 
-    bam_files = set()
-    bam_indices = set()
-    consensus = set()
-    depths = set()
-    variant_frequencies = set()    
-    depth = config["depth"]
-    full_virus_type_list = config["virus_type_list"]
+#     bam_files = set()
+#     bam_indices = set()
+#     consensus = set()
+#     depths = set()
+#     variant_frequencies = set()    
+#     depth = config["depth"]
+#     full_virus_type_list = config["virus_type_list"]
     
-    for sample, serotype_lst in serotypes.items():
-        for option in serotype_lst:
-            bam_files.add(f'{sample}.{option}.sort.bam')
-            bam_indices.add(f'{sample}.{option}.sort.bam.bai')
-            consensus.add(f'{sample}.{option}.{depth}.cons.fa')
-            depths.add(f'{sample}.{option}.depth.txt')
-            variant_frequencies.add(f'{sample}.{option}.{depth}.variants_frequency.tsv')
+#     for sample, serotype_lst in serotypes.items():
+#         for option in serotype_lst:
+#             bam_files.add(f'{sample}.{option}.sort.bam')
+#             bam_indices.add(f'{sample}.{option}.sort.bam.bai')
+#             consensus.add(f'{sample}.{option}.{depth}.cons.fa')
+#             depths.add(f'{sample}.{option}.depth.txt')
+#             variant_frequencies.add(f'{sample}.{option}.{depth}.variants_frequency.tsv')
 
-    ##allow for missing alignment files if using mash calls
-    if os.path.exists(os.path.join(config['tempdir'], bam)): 
-        for bam in bam_files:
-            source = os.path.join(config['tempdir'], bam)
-            dest = os.path.join(config["outdir"], "results", "bam_files")
-            shutil.move(source, dest)
+#     ##allow for missing alignment files if using mash calls
+#     if os.path.exists(os.path.join(config['tempdir'], bam)): 
+#         for bam in bam_files:
+#             source = os.path.join(config['tempdir'], bam)
+#             dest = os.path.join(config["outdir"], "results", "bam_files")
+#             shutil.move(source, dest)
         
-        for bam in bam_indices:
-            source = os.path.join(config['tempdir'], bam)
-            dest = os.path.join(config["outdir"], "results", "bam_files")
-            shutil.move(source, dest)
+#         for bam in bam_indices:
+#             source = os.path.join(config['tempdir'], bam)
+#             dest = os.path.join(config["outdir"], "results", "bam_files")
+#             shutil.move(source, dest)
 
-        for cons in consensus:
-            source = os.path.join(config['tempdir'], cons)
-            dest = os.path.join(config["outdir"], "results", "consensus_sequences")
-            shutil.move(source, dest)
+#         for cons in consensus:
+#             source = os.path.join(config['tempdir'], cons)
+#             dest = os.path.join(config["outdir"], "results", "consensus_sequences")
+#             shutil.move(source, dest)
 
-        for dep in depths:
-            source = clean_depth_file(config, os.path.join(config['tempdir'], dep))
-            dest = os.path.join(config["outdir"], "results", "depth")
-            shutil.move(source, dest)
+#         for dep in depths:
+#             source = clean_depth_file(config, os.path.join(config['tempdir'], dep))
+#             dest = os.path.join(config["outdir"], "results", "depth")
+#             shutil.move(source, dest)
 
-        for var_freq in variant_frequencies:
-            source = os.path.join(config['tempdir'], var_freq)
-            dest = os.path.join(config["outdir"], "results", "variants")
-            shutil.move(source, dest)
+#         for var_freq in variant_frequencies:
+#             source = os.path.join(config['tempdir'], var_freq)
+#             dest = os.path.join(config["outdir"], "results", "variants")
+#             shutil.move(source, dest)
 
 
 def make_alignments(config, serotypes):
