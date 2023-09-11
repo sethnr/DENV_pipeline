@@ -66,7 +66,7 @@ while IFS= read -r virustype || [[ -n "$virustype" ]]; do
     if [ -s ${trimbed} ]; then
         $CONDA_PREFIX/bin/python ${serotype_caller} --alignment ${outdir}/align/${fname}.${virustype}.out.aln --bed-file ${trimbed} --outfile ${outdir}/align/${fname}_all_virustype_info.txt
     else
-        $CONDA_PREFIX/bin/python ${serotype_caller}  --alignment ${outdir}/align/${fname}.${virustype}.out.aln --outfile ${outdir}/align/${fname}_all_virustype_info.txt
+        $CONDA_PREFIX/bin/python ${serotype_caller} --alignment ${outdir}/align/${fname}.${virustype}.out.aln                       --outfile ${outdir}/align/${fname}_all_virustype_info.txt
     fi
 
     echo "----->>>>>Identifying variants"
