@@ -103,7 +103,7 @@ rule caller:
         bams = lambda wildcards: expand(os.path.join(wildcards.outdir,"bams","{{sample}}.{target}.bam"),target=get_sample_strains(wildcards)),
         mashcalls = "{outdir}/results/mash/{sample}_calls.txt"
     output:
-        individual_all_virustype_info = "{outdir}/{sample}_all_virustype_info.txt"
+        individual_all_virustype_info = "{outdir}/aligns/{sample}_all_virustype_info.txt"
     log:
         log = "{outdir}/log_files/{sample}_mapping.log"
     params:
@@ -111,7 +111,8 @@ rule caller:
         depth = config["depth"],
         threshold = config["threshold"],
         #tempdir = config["tempdir"],
-        tempdir=os.path.join(config["outdir"], "bams"),
+        indir=os.path.join(config["outdir"], "bams"),
+        outdir=os.path.join(config["outdir"], "aligns"),
         primer_dir = config["reference_directory"],
         python_script = os.path.join(config['workflow_directory'],"scripts","serotype_caller.py"),
         python_script2 = os.path.join(config['workflow_directory'],"scripts", "make_empty_files.py")
@@ -125,7 +126,7 @@ rule caller:
 	{params.caller_script}  -c {input.mashcalls}  -p {params.primer_dir} \
                 -n {wildcards.sample} -s {params.python_script} \
                 -e {params.python_script2} -d {params.depth} -t {params.threshold} \
-                -C {resources.cpus_per_task} -T {params.tempdir} -L {log.log} \
+                -C {resources.cpus_per_task} -I {params.indir} -O {params.outdir} -L {log.log} \
                  >> {log.log} 2>&1
         
         if ! [-f "{params.tempdir}/{wildcards.sample}_all_virustype_info.txt"]; then 
