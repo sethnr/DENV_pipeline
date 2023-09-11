@@ -171,7 +171,7 @@ def clean_depth_file(config, depth_file):
 
 def make_alignments(config, serotypes):
 
-    align_dir = os.path.join(config["outdir"], "results", "aligns")
+    align_dir = os.path.join(config["outdir"], "results", "align")
     summary_dir = os.path.join(config["outdir"], "results", "summary")
     depth = config["depth"]
     full_virus_type_list = config["virus_type_list"]
