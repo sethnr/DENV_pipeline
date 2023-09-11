@@ -64,7 +64,8 @@ def sort_variant_files(config, serotypes):
 
     alignment_dir = os.path.join(config["outdir"], "results", "aligns")
     variants_dir = os.path.join(config["outdir"], "results", "variants")
-    
+    if not os.path.exists(variants_dir): os.path.mkdir(variants_dir)
+
     summary_file = open(os.path.join(config["outdir"], "results", "summary", "variants_summary.tsv"), 'w')
     summary_file.write("sample_id\tserotype\tvariant_count\n")
 

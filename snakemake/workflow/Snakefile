@@ -131,8 +131,8 @@ rule caller:
                 -C {resources.cpus_per_task} -I {params.indir} -O {params.outdir} -L {log.log} \
                  >> {log.log} 2>&1
         
-        if ! [-f "{params.outdir}/{wildcards.sample}_all_virustype_info.txt"]; then 
-            touch {params.outdir}/{wildcards.sample}_all_virustype_info.txt
+        if ! [-f "{params.outdir}/align/{wildcards.sample}_all_virustype_info.txt"]; then 
+            touch {params.outdir}/align/{wildcards.sample}_all_virustype_info.txt
 	fi
 	    """
 
