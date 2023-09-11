@@ -180,8 +180,8 @@ def make_alignments(config, serotypes):
     untrimmed_aln_dict = defaultdict(list)
     for sample, serotype_lst in serotypes.items():
         for i in serotype_lst:
-            trimmed = f'{sample}.{i}.{depth}.out.trim.aln'
-            untrimmed = f'{sample}.{i}.{depth}.out.aln'
+            trimmed = f'{sample}.{i}.out.trim.aln'
+            untrimmed = f'{sample}.{i}.out.aln'
             
             trimmed_aln_dict[i].append(trimmed)
             untrimmed_aln_dict[i].append(untrimmed)
