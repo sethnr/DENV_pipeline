@@ -54,7 +54,7 @@ def summarise_files(config, per_sample_files, serotype_call_file, top_call_file,
 
 
     sort_variant_files(config, serotypes)
-    get_right_serotype_files(config, serotypes)
+    #get_right_serotype_files(config, serotypes)
     make_alignments(config, serotypes)
 
     return
@@ -62,6 +62,8 @@ def summarise_files(config, per_sample_files, serotype_call_file, top_call_file,
 
 def sort_variant_files(config, serotypes):
 
+    alignment_dir = os.path.join(config["outdir"], "results", "alignments")
+    
     old_to_new = {'POS': 'position', 'REF': 'reference_base', 'ALT': 'alternative_base', 'REF_DP': 'reference_depth', 'REF_RV': 'reference_depth_reverse', 'REF_QUAL': 'reference_quality', 'ALT_DP': 'alternate_depth', 'ALT_RV': 'alternate_depth_reverse', 'ALT_QUAL': 'alternative_quality', 'ALT_FREQ': 'alternative_frequency', 'TOTAL_DP': 'total_depth', 'PVAL': 'p_value_fisher', 'PASS': 'pass', 'GFF_FEATURE': 'gff_feature', 'REF_CODON': 'reference_codon', 'REF_AA': 'reference_amino_acid', 'ALT_CODON': 'alternative_codon', 'ALT_AA': 'alternative_amino_acid'}
 
     summary_file = open(os.path.join(config["outdir"], "results", "summary", "variants_summary.tsv"), 'w')
@@ -71,8 +73,10 @@ def sort_variant_files(config, serotypes):
     depth = config["depth"]
     for sample, serotype_lst in serotypes.items():
         for option in full_virus_type_list:
-            input_file = os.path.join(config["tempdir"], f"{sample}.{option}.{depth}.variants.tsv")
-            output_file = os.path.join(config["tempdir"], f"{sample}.{option}.{depth}.variants_frequency.tsv")
+            #input_file = os.path.join(config["tempdir"], f"{sample}.{option}.{depth}.variants.tsv")
+            #output_file = os.path.join(config["tempdir"], f"{sample}.{option}.{depth}.variants_frequency.tsv")
+            input_file  = os.path.join(alignment_dir, f"{sample}.{option}.variants.tsv")
+            output_file = os.path.join(alignment_dir, f"{sample}.{option}.variants_frequency.tsv")
 
             count = 0
             with open(output_file, 'w') as fw:
@@ -136,7 +140,7 @@ def get_right_serotype_files(config, serotypes):
             variant_frequencies.add(f'{sample}.{option}.{depth}.variants_frequency.tsv')
 
     ##allow for missing alignment files if using mash calls
-    #if os.path.exists(os.path.join(config['tempdir'], bam)): 
+    if os.path.exists(os.path.join(config['tempdir'], bam)): 
     for bam in bam_files:
         source = os.path.join(config['tempdir'], bam)
         dest = os.path.join(config["outdir"], "results", "bam_files")
