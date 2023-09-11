@@ -114,7 +114,7 @@ rule caller:
         threshold = config["threshold"],
         #tempdir = config["tempdir"],
         indir=os.path.join(config["outdir"],"results" ,"bams"),
-        outdir=os.path.join(config["outdir"], "results","aligns"),
+        outdir=os.path.join(config["outdir"], "results"),
         primer_dir = config["reference_directory"],
         python_script = os.path.join(config['workflow_directory'],"scripts","serotype_caller.py"),
         python_script2 = os.path.join(config['workflow_directory'],"scripts", "make_empty_files.py")
