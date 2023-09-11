@@ -110,10 +110,11 @@ rule caller:
         caller_script = os.path.join(config['workflow_directory'],"scripts","caller.sh"),
         depth = config["depth"],
         threshold = config["threshold"],
-        tempdir = config["tempdir"],
+        #tempdir = config["tempdir"],
+        tempdir=os.path.join(config["outdir"], "bams"),
         primer_dir = config["reference_directory"],
-        python_script = os.path.join(config['workflow_directory'],"serotype_caller.py"),
-        python_script2 = os.path.join(config['workflow_directory'], "make_empty_files.py")
+        python_script = os.path.join(config['workflow_directory'],"scripts","serotype_caller.py"),
+        python_script2 = os.path.join(config['workflow_directory'],"scripts", "make_empty_files.py")
     resources:
         partition="day",
         mem_mb="40G",
@@ -121,8 +122,8 @@ rule caller:
         runtime=300
     container: "docker://sethnr/pgcoe_anypipe:0.01"
     shell:"""
-	{params.caller_script}  -c {input.mashcalls} \
-                -n {wildcards.sample} -p {params.primer_dir} -s {params.python_script} \
+	{params.caller_script}  -c {input.mashcalls}  -p {params.primer_dir} \
+                -n {wildcards.sample} -s {params.python_script} \
                 -e {params.python_script2} -d {params.depth} -t {params.threshold} \
                 -C {resources.cpus_per_task} -T {params.tempdir} -L {log.log} \
                  >> {log.log} 2>&1

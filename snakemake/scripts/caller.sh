@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
 cores=1
-while getopts "n:s:c:e:d:t:C:T:L:" OPTION; do
+while getopts "n:s:c:e:d:p:t:C:T:L:" OPTION; do
     case $OPTION in
     n) fname=$OPTARG    ;;
+    p) primer_dir=$OPTARG ;;
     
     #python helper scripts
     s) serotype_caller=$OPTARG   ;;
