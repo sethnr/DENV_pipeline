@@ -3,9 +3,11 @@ import sys
 import datetime as dt
 import shutil
 
+sys.path.insert(0, Path(workflow.basedir).parent.as_posix())
+
 from pathag_pipeline.utils import misc
-#from pathag_pipeline.scripts import visualisations
-#from pathag_pipeline.scripts import make_summary_files
+import scripts.visualisations
+import scripts.make_summary_files
 
 cwd = os.getcwd()
 
@@ -73,13 +75,13 @@ rule mapper:
     output:
         #bams = os.path.join(config["tmpdir"], "{sample}_{target}.bam"),
         #bams = expand("{{outdir}}/bams/{{sample}}_{target}.bam",target=TARGETS)
-        bam = "{outdir}/bams/{sample}.{target}.bam"
+        bam = "{outdir}/results/bams/{sample}.{target}.bam"
     log:
         log = os.path.join("{outdir}", "log_files", "_".join(["{sample}","{target}", "mapping.log"]))
     params:
         mapper_script = os.path.join(config['workflow_directory'],"scripts","mapper.sh"),
         primer_dir = config["reference_directory"],
-	tmpdir=os.path.join(config["outdir"], "bams"),
+	tmpdir=os.path.join(config["outdir"],"results", "bams"),
     resources:
         partition="day",
         mem_mb="40G",
@@ -100,10 +102,10 @@ rule caller:
         #bams = expand("{{outdir}}/bams/{{sample}}_{target}.bam",target=TARGETS),
         #bams = dynamic("{outdir}/bams/{sample}_{target}.bam"),
         #bams = get_sample_strains,
-        bams = lambda wildcards: expand(os.path.join(wildcards.outdir,"bams","{{sample}}.{target}.bam"),target=get_sample_strains(wildcards)),
+        bams = lambda wildcards: expand(os.path.join(wildcards.outdir,"results","bams","{{sample}}.{target}.bam"),target=get_sample_strains(wildcards)),
         mashcalls = "{outdir}/results/mash/{sample}_calls.txt"
     output:
-        individual_all_virustype_info = "{outdir}/aligns/{sample}_all_virustype_info.txt"
+        individual_all_virustype_info = "{outdir}/results/aligns/{sample}_all_virustype_info.txt"
     log:
         log = "{outdir}/log_files/{sample}_mapping.log"
     params:
@@ -111,8 +113,8 @@ rule caller:
         depth = config["depth"],
         threshold = config["threshold"],
         #tempdir = config["tempdir"],
-        indir=os.path.join(config["outdir"], "bams"),
-        outdir=os.path.join(config["outdir"], "aligns"),
+        indir=os.path.join(config["outdir"],"results" ,"bams"),
+        outdir=os.path.join(config["outdir"], "results","aligns"),
         primer_dir = config["reference_directory"],
         python_script = os.path.join(config['workflow_directory'],"scripts","serotype_caller.py"),
         python_script2 = os.path.join(config['workflow_directory'],"scripts", "make_empty_files.py")
@@ -129,15 +131,15 @@ rule caller:
                 -C {resources.cpus_per_task} -I {params.indir} -O {params.outdir} -L {log.log} \
                  >> {log.log} 2>&1
         
-        if ! [-f "{params.tempdir}/{wildcards.sample}_all_virustype_info.txt"]; then 
-            touch {params.tempdir}/{wildcards.sample}_all_virustype_info.txt
+        if ! [-f "{params.outdir}/{wildcards.sample}_all_virustype_info.txt"]; then 
+            touch {params.outdir}/{wildcards.sample}_all_virustype_info.txt
 	fi
 	    """
 
 
 rule summary:
     input:
-        individual_all_virustype_info = expand(os.path.join("{{outdir}}", "{sample}_all_virustype_info.txt"), sample=config["sample_list"])
+        individual_all_virustype_info = expand(os.path.join("{{outdir}}","results","aligns", "{sample}_all_virustype_info.txt"), sample=config["sample_list"])
     output:
         serotype_calls = "{outdir}/results/summary/virus_calls.tsv",
         all_serotype_summary = "{outdir}/results/summary/summary_all_samples.tsv",
@@ -148,7 +150,7 @@ rule summary:
         python_script = os.path.join(config['workflow_directory'],"scripts","make_summary_files.py")
     run:        
         print("summarising files")
-        make_summary_files.summarise_files(config, input.individual_all_virustype_info, output.serotype_calls, output.top_serotype_summary, output.all_serotype_summary)
+        scripts.make_summary_files.summarise_files(config, input.individual_all_virustype_info, output.serotype_calls, output.top_serotype_summary, output.all_serotype_summary)
         
         if config["download"]:
             for directory in os.listdir(params.results_dir):
