@@ -141,30 +141,30 @@ def get_right_serotype_files(config, serotypes):
 
     ##allow for missing alignment files if using mash calls
     if os.path.exists(os.path.join(config['tempdir'], bam)): 
-    for bam in bam_files:
-        source = os.path.join(config['tempdir'], bam)
-        dest = os.path.join(config["outdir"], "results", "bam_files")
-        shutil.move(source, dest)
-    
-    for bam in bam_indices:
-        source = os.path.join(config['tempdir'], bam)
-        dest = os.path.join(config["outdir"], "results", "bam_files")
-        shutil.move(source, dest)
+        for bam in bam_files:
+            source = os.path.join(config['tempdir'], bam)
+            dest = os.path.join(config["outdir"], "results", "bam_files")
+            shutil.move(source, dest)
+        
+        for bam in bam_indices:
+            source = os.path.join(config['tempdir'], bam)
+            dest = os.path.join(config["outdir"], "results", "bam_files")
+            shutil.move(source, dest)
 
-    for cons in consensus:
-        source = os.path.join(config['tempdir'], cons)
-        dest = os.path.join(config["outdir"], "results", "consensus_sequences")
-        shutil.move(source, dest)
+        for cons in consensus:
+            source = os.path.join(config['tempdir'], cons)
+            dest = os.path.join(config["outdir"], "results", "consensus_sequences")
+            shutil.move(source, dest)
 
-    for dep in depths:
-        source = clean_depth_file(config, os.path.join(config['tempdir'], dep))
-        dest = os.path.join(config["outdir"], "results", "depth")
-        shutil.move(source, dest)
+        for dep in depths:
+            source = clean_depth_file(config, os.path.join(config['tempdir'], dep))
+            dest = os.path.join(config["outdir"], "results", "depth")
+            shutil.move(source, dest)
 
-    for var_freq in variant_frequencies:
-        source = os.path.join(config['tempdir'], var_freq)
-        dest = os.path.join(config["outdir"], "results", "variants")
-        shutil.move(source, dest)
+        for var_freq in variant_frequencies:
+            source = os.path.join(config['tempdir'], var_freq)
+            dest = os.path.join(config["outdir"], "results", "variants")
+            shutil.move(source, dest)
 
 
 def make_alignments(config, serotypes):
