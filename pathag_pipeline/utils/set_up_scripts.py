@@ -132,32 +132,32 @@ def get_sample_list(config):
     return config
 
 
-def make_folders(config):
+# def make_folders(config):
 
-    out_dir = config["outdir"]
-    temp_dir = config["tempdir"]
-    results_dir = os.path.join(config["outdir"], "results")
-    log_dir = os.path.join(config["outdir"], "log_files")
+#     out_dir = config["outdir"]
+#     temp_dir = config["tempdir"]
+#     results_dir = os.path.join(config["outdir"], "results")
+#     log_dir = os.path.join(config["outdir"], "log_files")
 
-    if not os.path.exists(out_dir):
-        os.mkdir(out_dir)
+#     if not os.path.exists(out_dir):
+#         os.mkdir(out_dir)
         
-    if os.path.exists(os.path.join(out_dir, "results/summary")) and not config["overwrite"]:
-        sys.stderr.write(misc.green(f"Error: results files already exist at {out_dir}. Use --overwrite flag to delete and regenerate results.\n"))
-        sys.exit(-1)
-    else:
-        misc.make_directory(results_dir)
-        misc.make_directory(temp_dir)
-        misc.make_directory(log_dir)
+#     if os.path.exists(os.path.join(out_dir, "results/summary")) and not config["overwrite"]:
+#         sys.stderr.write(misc.green(f"Error: results files already exist at {out_dir}. Use --overwrite flag to delete and regenerate results.\n"))
+#         sys.exit(-1)
+#     else:
+#         misc.make_directory(results_dir)
+#         misc.make_directory(temp_dir)
+#         misc.make_directory(log_dir)
 
-        misc.make_directory(os.path.join(results_dir, "bam_files"))
-        misc.make_directory(os.path.join(results_dir, "variants"))
-        misc.make_directory(os.path.join(results_dir, "depth"))
-        misc.make_directory(os.path.join(results_dir, "consensus_sequences"))
-        misc.make_directory(os.path.join(results_dir, "alignments"))
+#         misc.make_directory(os.path.join(results_dir, "bam_files"))
+#         misc.make_directory(os.path.join(results_dir, "variants"))
+#         misc.make_directory(os.path.join(results_dir, "depth"))
+#         misc.make_directory(os.path.join(results_dir, "consensus_sequences"))
+#         misc.make_directory(os.path.join(results_dir, "alignments"))
 
-        if config["download"]:
-            misc.make_directory(os.path.join(config["outdir"], "downloads")) 
+#         if config["download"]:
+#             misc.make_directory(os.path.join(config["outdir"], "downloads")) 
 
 def set_up_reference_directory(config):
 

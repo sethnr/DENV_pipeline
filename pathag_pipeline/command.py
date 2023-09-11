@@ -87,7 +87,7 @@ def main(sysargs = sys.argv[1:]):
     if config["overwrite"]:
         set_up_scripts.overwrite(config)
         
-    set_up_scripts.make_folders(config)
+    # set_up_scripts.make_folders(config)
 
     if config["symlink"]:
         config = set_up_scripts.symlink_setup(config, cwd)
