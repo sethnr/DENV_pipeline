@@ -62,7 +62,7 @@ def variant_plot(results_dir, variants_summary_file, virus_dict, colour_dict, pa
 
     plt.legend(handles=patch_list,fontsize=15,frameon=False)
 
-    plt.savefig(os.path.join(results_dir, "variant_plot.pdf"), bbox_inches="tight")
+    plt.savefig(os.path.join(results_dir, "summary" ,"variant_plot.pdf"), bbox_inches="tight")
 
 
 def ct_plot(results_dir, ct_file, ct_column, id_column, final_serotype_calls, virus_dict, colour_dict, patch_list):
