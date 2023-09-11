@@ -69,7 +69,7 @@ while IFS= read -r virustype || [[ -n "$virustype" ]]; do
     fi
 
     echo "----->>>>>Identifying variants"
-    samtools mpileup -aa --reference ${fasta} -A -d 0 -Q 0 ${indir}/${fname}.${virustype}.sort.bam | ivar variants -p ${outdir}/align/${fname}.${virustype}.variants -q 20 -t 0.03 -r ${fasta} >> ${log}     
+    samtools mpileup -aa --reference ${fasta} -A -d 0 -Q 0 ${indir}/${fname}.${virustype}.sort.bam | ivar variants -p ${outdir}/variants/${fname}.${virustype}.variants -q 20 -t 0.03 -r ${fasta} >> ${log}     
     echo "----->>>>>>Getting depths"
     bedtools genomecov -d -ibam ${indir}/${fname}.${virustype}.sort.bam > ${outdir}/align/${fname}.${virustype}.depth.txt; 
 
