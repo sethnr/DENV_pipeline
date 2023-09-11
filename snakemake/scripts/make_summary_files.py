@@ -62,7 +62,8 @@ def summarise_files(config, per_sample_files, serotype_call_file, top_call_file,
 
 def sort_variant_files(config, serotypes):
 
-    alignment_dir = os.path.join(config["outdir"], "results", "alignments")
+    alignment_dir = os.path.join(config["outdir"], "results", "aligns")
+    summary_dir = os.path.join(config["outdir"], "results", "summary")
     
     old_to_new = {'POS': 'position', 'REF': 'reference_base', 'ALT': 'alternative_base', 'REF_DP': 'reference_depth', 'REF_RV': 'reference_depth_reverse', 'REF_QUAL': 'reference_quality', 'ALT_DP': 'alternate_depth', 'ALT_RV': 'alternate_depth_reverse', 'ALT_QUAL': 'alternative_quality', 'ALT_FREQ': 'alternative_frequency', 'TOTAL_DP': 'total_depth', 'PVAL': 'p_value_fisher', 'PASS': 'pass', 'GFF_FEATURE': 'gff_feature', 'REF_CODON': 'reference_codon', 'REF_AA': 'reference_amino_acid', 'ALT_CODON': 'alternative_codon', 'ALT_AA': 'alternative_amino_acid'}
 
@@ -76,7 +77,7 @@ def sort_variant_files(config, serotypes):
             #input_file = os.path.join(config["tempdir"], f"{sample}.{option}.{depth}.variants.tsv")
             #output_file = os.path.join(config["tempdir"], f"{sample}.{option}.{depth}.variants_frequency.tsv")
             input_file  = os.path.join(alignment_dir, f"{sample}.{option}.variants.tsv")
-            output_file = os.path.join(alignment_dir, f"{sample}.{option}.variants_frequency.tsv")
+            output_file = os.path.join(summary_dir, f"{sample}.{option}.variants_frequency.tsv")
 
             count = 0
             with open(output_file, 'w') as fw:
@@ -169,8 +170,8 @@ def get_right_serotype_files(config, serotypes):
 
 def make_alignments(config, serotypes):
 
-    alignment_dir = os.path.join(config["outdir"], "results", "alignments")
-    tempdir = config["tempdir"]
+    summary_dir = os.path.join(config["outdir"], "results", "aligns")
+    align_dir = os.path.join(config["outdir"], "results", "summary")
     depth = config["depth"]
     full_virus_type_list = config["virus_type_list"]
     
@@ -185,11 +186,11 @@ def make_alignments(config, serotypes):
             untrimmed_aln_dict[i].append(untrimmed)
 
     for virus_type, alns in trimmed_aln_dict.items():
-        new_file = f'{alignment_dir}/{virus_type}.trim.aln'
-        cat_string = " ".join([f"{tempdir}/{aln}" for aln in alns])
+        new_file = f'{summary_dir}/{virus_type}.trim.aln'
+        cat_string = " ".join([f"{align_dir}/{aln}" for aln in alns])
         os.system(f"cat {cat_string} >> {new_file}")
 
     for virus_type, alns in untrimmed_aln_dict.items():
-        new_file = f'{alignment_dir}/{virus_type}.untrim.aln'
-        cat_string = " ".join([f"{tempdir}/{aln}" for aln in alns])
+        new_file = f'{summary_dir}/{virus_type}.untrim.aln'
+        cat_string = " ".join([f"{align_dir}/{aln}" for aln in alns])
         os.system(f"cat {cat_string} >> {new_file}")
