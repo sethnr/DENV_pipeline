@@ -163,8 +163,8 @@ rule summary:
                     dest = os.path.join("{wildcards.outdir}", "downloads")
                     shell("cp -r {source} {dest}")
 
-        if not config["temp"]:
-            shutil.rmtree(config["tempdir"])
+        #if not config["temp"]:
+        #    shutil.rmtree(config["tempdir"])
 
 rule make_qc_plots:
     input:
