@@ -71,12 +71,12 @@ You can also provide all of your arguments using a config file. This is specifie
 Specify the main output directory using ``--outdir``. Default is the generation of a new folder with today's date.
 
 Within this, there will be separate folders containing:
- - <outdir>/results/mash      -> target genome estimates
- - <outdir>/results/bams      -> alignment bams
- - <outdir>/results/consensus -> consensus sequence
- - <outdir>/results/align     -> aligned consensus
- - <outdir>/results/variants  -> sample SNVs
- - <outdir>/results/summary   -> summary files & QC
+ - outdir/results/mash      -> target genome estimates
+ - outdir/results/bams      -> alignment bams
+ - outdir/results/consensus -> consensus sequence
+ - outdir/results/align     -> aligned consensus
+ - outdir/results/variants  -> sample SNVs
+ - outdir/results/summary   -> summary files & QC
    
 
 1. results:
