@@ -10,7 +10,7 @@ This pipeline takes raw read data in the form of fastq files, maps them against 
 
 IMPORTANT: the bed files must correspond to the wet lab protocol that you used and the reference sequence used to generate them otherwise the sequences generated will be incorrect. 
 
-It estimates input files virus types based on the minhash algorith as implemented in [Mash https://github.com/marbl/Mash]. This is confirmed if it has more than 50% coverage of the reference genome provided.
+It estimates input files virus types based on the minhash algorith as implemented in [Mash](https://github.com/marbl/Mash). This is confirmed if it has more than 50% coverage of the reference genome provided.
 
 If running on a server, it is highly recommended to run using screen/tmux or similar.
 Running with apptainer / singularity is recommended, but local install instructions are also given 
@@ -70,7 +70,14 @@ You can also provide all of your arguments using a config file. This is specifie
 
 Specify the main output directory using ``--outdir``. Default is the generation of a new folder with today's date.
 
-Within this, there will be:
+Within this, there will be separate folders containing:
+ - <outdir>/results/mash      -> target genome estimates
+ - <outdir>/results/bams      -> alignment bams
+ - <outdir>/results/consensus -> consensus sequence
+ - <outdir>/results/align     -> aligned consensus
+ - <outdir>/results/variants  -> sample SNVs
+ - <outdir>/results/summary   -> summary files & QC
+   
 
 1. results:
 	- virus_calls.tsv: Contains virus calls per sample. I.e. those viruses with which the sample has more than 50% coverage
@@ -96,18 +103,7 @@ Within this, there will be:
 	Log files for each step of the pipeline, named by snakemake rule and sample - mostly useful for debugging.
 
 
-4. temporary_files (if option ``--temp`` is used):
-
-	All files produced in the run of the pipeline that don't make it to results.
-	This includes intermediate files produced by software, and bam/fasta/variant files for virus comparisons which did not meet the threshold for the sample to be called as that virus
 	
-	Mostly for debugging purposes
-	
-5. downloads (if option ``--download`` is used):
-
-	The same as results, but without the bam files. 
-	
-	For download and storage in places with less data storage capacity (eg dropbox)
 	
 
 
