@@ -79,7 +79,7 @@ Within this, there will be separate folders containing:
  - outdir/results/summary   -> summary files & QC
    
 
-1. results:
+1. Summary files:
 	- virus_calls.tsv: Contains virus calls per sample. I.e. those viruses with which the sample has more than 50% coverage
 	- top_virus_all_samples.tsv: Contains the highest coverage virus per sample, regardless of coverage
 	- summary_all_samples.tsv: contains information about all possible virus options provided per sample
@@ -88,8 +88,7 @@ Within this, there will be separate folders containing:
 	- depth - text files of each position of the genome and their sequencing depth by sample. NB positions are relative to reference sequence
 	- variants - contains a summary file of the number of variants by sample, and then a file for each sample containing additional information about variants
 
-2.  Within results, there are some QC plots:
-
+2. QC plots:
 	- variant_plot: plots sample id against the number of variants (i.e. mutations compared to the reference genome) in between 20% and 80% of the reads. Useful for detecting co-infections
 	- ct_plot: plots genome coverage against Ct value coloured by call.
 	
