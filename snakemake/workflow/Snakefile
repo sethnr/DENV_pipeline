@@ -86,7 +86,7 @@ rule indexbwa:
     container: "docker://sethnr/pgcoe_anypipe:0.01"
     shell:"""
 	{params.idx_script} \
-                -C {resources.cpus_per_task} 
+                -C {resources.cpus_per_task} \
                 {input.fasta} >> {log.log} 2>&1
 	    """
 
