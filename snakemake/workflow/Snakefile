@@ -54,7 +54,6 @@ checkpoint callstrain:
 		-d {params.dist} -p {params.prob} \
         -o {params.prefix} \
         {input.read_location}  2>{log}
-
         """
 
 
@@ -70,12 +69,10 @@ def get_sample_bams(wildcards):
 rule mapper:
     input:
         read_location = os.path.join(config["indir"], "{sample}"),
-        mashcalls = "{outdir}/results/mash/{sample}_calls.txt",
-	fasta = os.path.join(config["reference_directory"],"{target}.fasta")
+        #mashcalls = os.path.join("{outdir}","results","mash","{sample}_calls.txt"),
+        fasta = os.path.join(config["reference_directory"],"{target}.fasta")
     output:
-        #bams = os.path.join(config["tmpdir"], "{sample}_{target}.bam"),
-        #bams = expand("{{outdir}}/bams/{{sample}}_{target}.bam",target=TARGETS)
-        bam = "{outdir}/results/bams/{sample}.{target}.bam"
+        bam = os.path.join("{outdir}","results","bams","{sample}.{target}.bam")
     log:
         log = os.path.join("{outdir}", "log_files", "_".join(["{sample}","{target}", "mapping.log"]))
     params:
@@ -89,7 +86,7 @@ rule mapper:
         runtime=300
     container: "docker://sethnr/pgcoe_anypipe:0.01"
     shell:"""
-	{params.mapper_script}  -c {input.mashcalls} -t {wildcards.target} \
+	{params.mapper_script}  -t {wildcards.target} \
                 -n {wildcards.sample} -p {params.primer_dir}  \
                 -C {resources.cpus_per_task} -T {params.tmpdir} -L {log.log} \
                 {input.read_location}/*R1* {input.read_location}/*R2* \
@@ -99,11 +96,8 @@ rule mapper:
 
 rule caller:
     input:
-        #bams = expand("{{outdir}}/bams/{{sample}}_{target}.bam",target=TARGETS),
-        #bams = dynamic("{outdir}/bams/{sample}_{target}.bam"),
-        #bams = get_sample_strains,
         bams = lambda wildcards: expand(os.path.join(wildcards.outdir,"results","bams","{{sample}}.{target}.bam"),target=get_sample_strains(wildcards)),
-        mashcalls = "{outdir}/results/mash/{sample}_calls.txt"
+        mashcalls = os.path.join("{outdir}","results","mash","{sample}_calls.txt"),
     output:
         individual_all_virustype_info = "{outdir}/results/align/{sample}_all_virustype_info.txt"
     log:
@@ -141,12 +135,12 @@ rule summary:
     input:
         individual_all_virustype_info = expand(os.path.join("{{outdir}}","results","align", "{sample}_all_virustype_info.txt"), sample=config["sample_list"])
     output:
-        serotype_calls = "{outdir}/results/summary/virus_calls.tsv",
-        all_serotype_summary = "{outdir}/results/summary/summary_all_samples.tsv",
-        top_serotype_summary = "{outdir}/results/summary/top_virus_all_samples.tsv",
-        variant_summary_file = "{outdir}/results/summary/variants_summary.tsv"
+        serotype_calls =       os.path.join("{outdir}","results","summary","virus_calls.tsv"),
+        all_serotype_summary = os.path.join("{outdir}","results","summary","summary_all_samples.tsv"),
+        top_serotype_summary = os.path.join("{outdir}","results","summary","top_virus_all_samples.tsv"),
+        variant_summary_file = os.path.join("{outdir}","results","summary","variants_summary.tsv")
     params:
-        results_dir = "{outdir}/results",
+        results_dir =   os.path.join("{outdir}","results"),
         python_script = os.path.join(config['workflow_directory'],"scripts","make_summary_files.py")
     run:        
         print("summarising files")

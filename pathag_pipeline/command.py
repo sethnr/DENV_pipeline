@@ -26,11 +26,15 @@ def main(sysargs = sys.argv[1:]):
 
     parser.add_argument("--config", help="config file containing all relevant arguments")
     
-    parser.add_argument("--symlink", dest="symlink", help="argument for generating symlinks")
     parser.add_argument("--indir", help="directory containing samples. Each sample must be a folder with the forward and reverse runs in. Default is same as output directory")
     parser.add_argument("--outdir", dest="outdir", help="location where files will be stored.")
     parser.add_argument("--reference-directory", "-rd", help="location where bed files and reference genomes are")
     parser.add_argument("--workflow-directory", "-wd", help="location where snakemake workflow is")
+
+    parser.add_argument("--symlink", dest="symlink", help="argument for generating symlinks")
+
+
+    #pipeline specific
     parser.add_argument("--depth", help="depth to map sequences to. Default=10")
     parser.add_argument("--threshold", help="threshold to call consensus positions at, default=0.75",dest="threshold")
 
@@ -50,7 +54,7 @@ def main(sysargs = sys.argv[1:]):
     parser.add_argument("--singularity", help="flag for running on HPC with apptainer / singularity", action="store_true")
     parser.add_argument("--verbose", "-v", dest="verbose", action="store_true")
     parser.add_argument("--help", "-h", action="store_true", dest="help")
-    parser.add_argument("--overwrite", help="overwrite current results", action="store_true", default=False)
+    # parser.add_argument("--overwrite", help="overwrite current results", action="store_true", default=False)
 
 
     if len(sysargs)<1: 
@@ -84,8 +88,8 @@ def main(sysargs = sys.argv[1:]):
     config = set_up_scripts.set_up_temporary_directory_path(config)
     config = set_up_scripts.set_up_reference_directory(config)
 
-    if config["overwrite"]:
-        set_up_scripts.overwrite(config)
+    # if config["overwrite"]:
+    #     set_up_scripts.overwrite(config)
         
     # set_up_scripts.make_folders(config)
 

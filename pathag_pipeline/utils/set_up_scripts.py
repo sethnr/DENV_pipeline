@@ -84,17 +84,17 @@ def load_yaml(f):
     return input_config
 
 
-def overwrite(config):
+# def overwrite(config):
 
-    shutil.rmtree(os.path.join(config["outdir"], "results"), ignore_errors=True)
-    if os.path.exists(config["tempdir"]):
-        shutil.rmtree(config["tempdir"], ignore_errors=True)
-    if os.path.exists(os.path.join(config["outdir"], "downloads")):
-        shutil.rmtree(os.path.join(config["outdir"], "downloads"), ignore_errors=True)
-    if os.path.exists(os.path.join(config["outdir"], "log_files")):
-        shutil.rmtree(os.path.join(config["outdir"], "log_files"), ignore_errors=True)
-    if os.path.exists(os.path.join(config["outdir"], ".snakemake")):
-        shutil.rmtree(os.path.join(config["outdir"], ".snakemake"), ignore_errors=True)
+#     shutil.rmtree(os.path.join(config["outdir"], "results"), ignore_errors=True)
+#     if os.path.exists(config["tempdir"]):
+#         shutil.rmtree(config["tempdir"], ignore_errors=True)
+#     if os.path.exists(os.path.join(config["outdir"], "downloads")):
+#         shutil.rmtree(os.path.join(config["outdir"], "downloads"), ignore_errors=True)
+#     if os.path.exists(os.path.join(config["outdir"], "log_files")):
+#         shutil.rmtree(os.path.join(config["outdir"], "log_files"), ignore_errors=True)
+#     if os.path.exists(os.path.join(config["outdir"], ".snakemake")):
+#         shutil.rmtree(os.path.join(config["outdir"], ".snakemake"), ignore_errors=True)
     
 
 def symlink_setup(config, cwd):
