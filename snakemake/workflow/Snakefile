@@ -65,12 +65,60 @@ def get_sample_strains(wildcards):
 def get_sample_bams(wildcards):
     mytargets = get_sample_strains(wildcards)
     return expand(os.path.join(wildcards.outdir,"bams","{sample}_{target}.bam",sample=wildcards.sample,target=mytargets))
-    
+
+
+rule indexbwa:
+    input:
+        fasta = os.path.join(config["reference_directory"],"{target}.fasta")
+    output:
+        bwt = os.path.join(config["reference_directory"],"{target}.fasta.bwt")
+    log:
+        log = os.path.join(config["outdir"], "log_files", "_".join(["{target}", "index.bwa.log"]))
+    params:
+        idx_script = os.path.join(config['workflow_directory'],"scripts","indexer.sh"),
+        primer_dir = config["reference_directory"],
+    resources:
+        partition="day",
+        mem_mb="40G",
+        cpus_per_task=4,
+        runtime=300
+    container: "docker://sethnr/pgcoe_anypipe:0.01"
+    shell:"""
+	{params.mapper_script} \
+                -C {resources.cpus_per_task} 
+                {input.fasta} >> {log.log} 2>&1
+	    """
+
+
+rule indexmash:
+    input:
+        fastas = expand(os.path.join(config["reference_directory"],"{target}.fasta"),target=glob_wildcards(os.path.join(config["reference_directory"],"{target}.fasta"))),
+    output:
+        msh = os.path.join(config["reference_directory"],"all.msh")
+    log:
+        log = os.path.join(config["outdir"], "log_files", "index.mash.log")
+    params:
+        idx_script = os.path.join(config['workflow_directory'],"scripts","indexer.sh"),
+        genome_size = "11k",
+    resources:
+        partition="day",
+        mem_mb="40G",
+        cpus_per_task=4,
+        runtime=300
+    container: "docker://sethnr/pgcoe_anypipe:0.01"
+    shell:"""
+	{params.mapper_script} \
+                -m {output.msh} -g {params.genome_size} \
+                {input.fastas} >> {log.log} 2>&1
+	    """
+
+
 rule mapper:
     input:
         read_location = os.path.join(config["indir"], "{sample}"),
-        #mashcalls = os.path.join("{outdir}","results","mash","{sample}_calls.txt"),
-        fasta = os.path.join(config["reference_directory"],"{target}.fasta")
+        fasta = os.path.join(config["reference_directory"],"{target}.fasta"),
+        bwt = os.path.join(config["reference_directory"],"{target}.fasta.bwt"),
+        msh = os.path.join(config["reference_directory"],"all.msh")
     output:
         bam = os.path.join("{outdir}","results","bams","{sample}.{target}.bam")
     log:
