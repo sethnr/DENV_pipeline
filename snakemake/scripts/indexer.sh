@@ -19,11 +19,16 @@ while getopts "i:o:g:m:C:" OPTION; do
 done
 shift $(expr $OPTIND - 1 )
 
-if [! -z "$mashout" ]; then
+if [ -z "$mashout" ]; then
+    FASTA=$1
+    echo "generating bwa index for ${FASTA}"  2>&1
+    echo bwa index ${FASTA} 2>&1
+    bwa index ${FASTA}
+else 
     FASTAS=$@;
-    echo "making mash indices for ${FASTAS}" >$2
+    echo "making mash indices for ${FASTAS}"  2>&1
     for $F in ${FASTAS}; do 
-        echo mash sketch -g ${genome_size} ${F} > $2 
+        echo mash sketch -g ${genome_size} ${F} 2>&1 
         mash sketch -g ${genome_size} ${F} ; 
     done
 
@@ -36,11 +41,4 @@ if [! -z "$mashout" ]; then
 
     echo mash paste $mashout ${mashidx}
     mash paste $mashout ${mashidx}
-
-else 
-    FASTA=$1
-    echo "generating bwa index for ${FASTA}" >$2
-    echo bwa index ${FASTA}
-    bwa index ${FASTA}
-
 fi
