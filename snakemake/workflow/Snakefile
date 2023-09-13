@@ -22,7 +22,7 @@ TARGETS = [line.strip() for line in open("{refdir}/refs.txt".format(refdir=confi
 rule all: 
     input:
         os.path.join(config["outdir"], "results/summary", "virus_calls.tsv"),
-        os.path.join(config["outdir"], "results", "variant_plot.pdf")
+        os.path.join(config["outdir"], "results/summary", "variant_plot.pdf")
 
 checkpoint callstrain:
     input:
@@ -184,7 +184,7 @@ rule make_qc_plots:
             shell("cp -r {source} {dest}")
 
         if config["ct_file"] and config["ct_column"] and config["id_column"]:
-            visualisations.ct_plot(params.results_dir, config["ct_file"], config["ct_column"], config["id_column"], input.serotype_calls_file, serotype_dict, colour_dict, patch_list)
+            visualisations.ct_plot(os.path.join(params.results_dir,"summary"), config["ct_file"], config["ct_column"], config["id_column"], input.serotype_calls_file, serotype_dict, colour_dict, patch_list)
             if config["download"]:
                 source = os.path.join(params.results_dir, "ct_plot.pdf")
                 dest = os.path.join(config["outdir"], "downloads")
