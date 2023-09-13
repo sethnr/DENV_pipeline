@@ -10,38 +10,35 @@ This pipeline takes raw read data in the form of fastq files, maps them against 
 
 IMPORTANT: the bed files must correspond to the wet lab protocol that you used and the reference sequence used to generate them otherwise the sequences generated will be incorrect. 
 
-It calls input files as a virus type if it has more than 50% coverage of the reference genome provided.
+It estimates input files virus types based on the minhash algorith as implemented in [Mash](https://github.com/marbl/Mash). This is confirmed if it has more than 50% coverage of the reference genome provided.
 
 If running on a server, it is highly recommended to run using screen/tmux or similar.
+Running with apptainer / singularity is recommended, but local install instructions are also given 
 
-# Installation instructions
+# Installation instructions (apptainer / singularity)
 
-1. Clone this repo by going to your command line interface and typing ```git clone https://github.com/grubaughlab/DENV_pipeline.git```
-2. Navigate to your local copy of the repo by typing ```cd DENV_pipeline```
+1. Clone this repo by going to your command line interface and typing ```git clone https://github.com/sethnr/pathag_pipeline.git```
+2. Navigate to your local copy of the repo by typing ```cd pathag_pipeline```
+3. Install packages from the repo by typing ```pip install .```
+
+# Installation instructions (local)
+
+1. Clone this repo by going to your command line interface and typing ```git clone https://github.com/sethnr/pathag_pipeline.git```
+2. Navigate to your local copy of the repo by typing ```cd pathag_pipeline```
 3. Create the conda environment by typing ```conda env create -f environment.yml``` You will need conda to be installed first, installation instructions found here: https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html
 4. Activate the environment by typing ```conda activate analysis_env```
 5. Install packages from the repo by typing ```pip install .```
 
 
-NB If step 3 fails on a server because of a "bus error", then first run the command "salloc" to request more memory. If this also fails, I've found that mamba works well so if that's installed on your server give that a go. For Yale HPCs, you may need to run "module load miniconda" before running step 3.
-
 # Running the pipeline
 
-```denv_pipeline -h``` will give you all of the usage instructions (information on these options at the bottom of this readme)
-
+```pathag_pipeline -h``` will give you all of the usage instructions (information on these options at the bottom of this readme)
 
 ### Example commands
 
-If you are using our bed files and reference sequences, the following command is the simplest way to run a sample:
-
-```denv_pipeline --indir <input-directory>```
-
-If you want to use your own bed files and reference sequences:
-
-```denv_pipeline --indir <input-directory> --reference-directory <reference-directory>```
+```pathag_pipeline --indir <input-directory> --reference-directory <reference-directory> --singularity --slurm```
 
 ### Main inputs
-
 
 #### 1. Fastq files
 As a minimum you need fastQ files to analyse. There are two ways you can provide these:
@@ -73,9 +70,16 @@ You can also provide all of your arguments using a config file. This is specifie
 
 Specify the main output directory using ``--outdir``. Default is the generation of a new folder with today's date.
 
-Within this, there will be:
+Within this, there will be separate folders containing:
+ - outdir/results/mash      -> target genome estimates
+ - outdir/results/bams      -> alignment bams
+ - outdir/results/consensus -> consensus sequence
+ - outdir/results/align     -> aligned consensus
+ - outdir/results/variants  -> sample SNVs
+ - outdir/results/summary   -> summary files & QC
+   
 
-1. results:
+1. Summary files:
 	- virus_calls.tsv: Contains virus calls per sample. I.e. those viruses with which the sample has more than 50% coverage
 	- top_virus_all_samples.tsv: Contains the highest coverage virus per sample, regardless of coverage
 	- summary_all_samples.tsv: contains information about all possible virus options provided per sample
@@ -84,8 +88,7 @@ Within this, there will be:
 	- depth - text files of each position of the genome and their sequencing depth by sample. NB positions are relative to reference sequence
 	- variants - contains a summary file of the number of variants by sample, and then a file for each sample containing additional information about variants
 
-2.  Within results, there are some QC plots:
-
+2. QC plots:
 	- variant_plot: plots sample id against the number of variants (i.e. mutations compared to the reference genome) in between 20% and 80% of the reads. Useful for detecting co-infections
 	- ct_plot: plots genome coverage against Ct value coloured by call.
 	
@@ -99,18 +102,7 @@ Within this, there will be:
 	Log files for each step of the pipeline, named by snakemake rule and sample - mostly useful for debugging.
 
 
-4. temporary_files (if option ``--temp`` is used):
-
-	All files produced in the run of the pipeline that don't make it to results.
-	This includes intermediate files produced by software, and bam/fasta/variant files for virus comparisons which did not meet the threshold for the sample to be called as that virus
 	
-	Mostly for debugging purposes
-	
-5. downloads (if option ``--download`` is used):
-
-	The same as results, but without the bam files. 
-	
-	For download and storage in places with less data storage capacity (eg dropbox)
 	
 
 
