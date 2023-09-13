@@ -27,7 +27,8 @@ rule all:
 
 checkpoint callstrain:
     input:
-        read_location = os.path.join(config["indir"], "{sample}")
+        msh = os.path.join(config["reference_directory"],"all.msh"),
+	read_location = os.path.join(config["indir"], "{sample}")
     output:
         mashout = "{outdir}/results/mash/{sample}_mash.txt",
         mashcalls = "{outdir}/results/mash/{sample}_calls.txt"

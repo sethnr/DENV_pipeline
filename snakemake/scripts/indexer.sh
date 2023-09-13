@@ -9,7 +9,7 @@ while getopts "i:o:g:m:C:" OPTION; do
     case $OPTION in
     i) infile=$OPTARG      ;;
     o) outfile=$OPTARG     ;;
-    m) mashout=TRUE         ;;
+    m) mashout=$OPTARG     ;;
     g) genome_size=$OPTARG ;;    
     C) cores=$OPTARG       ;;
     *)  echo "option not recognised"
@@ -25,20 +25,31 @@ if [ -z "$mashout" ]; then
     echo bwa index ${FASTA} 2>&1
     bwa index ${FASTA}
 else 
-    FASTAS=$@;
+    FASTAS=($@);
     echo "making mash indices for ${FASTAS}"  2>&1
-    for $F in ${FASTAS}; do 
-        echo mash sketch -g ${genome_size} ${F} 2>&1 
-        mash sketch -g ${genome_size} ${F} ; 
-    done
+    #for F in ${FASTAS}; do 
+    #    echo mash sketch -g ${genome_size} ${F} 2>&1 
+    #    mash sketch -g ${genome_size} ${F} ; 
+    #done
 
     mashidx=("${FASTAS[@]}")
 
-    for i in "${!mashidx[@]}"; do
-        echo mashidx[$i]  --> ${mashidx[$i]/.fasta/.msh}
-        mashidx[$i]=${mashidx[$i]/.fasta/.msh}
+    echo "${!FASTAS[@]}"
+    echo "${!mashidx[@]}"
+    
+    for i in "${!FASTAS[@]}"; do
+	echo $i ":"
+	echo mash sketch -g ${genome_size} ${FASTAS[$i]} 2>&1
+        mash sketch -g ${genome_size} ${FASTAS[$i]} ;
+	echo "-" 
+        echo ${FASTAS[$i]}  '-->' ${FASTAS[$i]/.fasta/.fasta.msh}
+        FASTAS[$i]=${FASTAS[$i]/.fasta/.fasta.msh}
+       
     done
 
-    echo mash paste $mashout ${mashidx}
-    mash paste $mashout ${mashidx}
+    echo "-"
+    echo "merging mash indices"
+    echo mash paste $mashout ${FASTAS[*]}
+    mash paste $mashout ${FASTAS[*]}
+    #mash paste $mashout ${mashidx}
 fi
