@@ -5,7 +5,7 @@ cores=1
 
 genome_size="11k"
 
-while getopts "i:o:C:m:" OPTION; do
+while getopts "i:o:g:m:C:" OPTION; do
     case $OPTION in
     i) infile=$OPTARG      ;;
     o) outfile=$OPTARG     ;;
