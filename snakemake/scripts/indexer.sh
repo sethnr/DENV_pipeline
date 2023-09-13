@@ -32,7 +32,7 @@ if [! -z "$mashout" ]; then
     for i in "${!mashidx[@]}"; do
         echo mashidx[$i]  --> ${mashidx[$i]/.fasta/.msh}
         mashidx[$i]=${mashidx[$i]/.fasta/.msh}
-    fi
+    done
 
     echo mash paste $mashout ${mashidx}
     mash paste $mashout ${mashidx}
