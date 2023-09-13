@@ -118,8 +118,7 @@ rule mapper:
     input:
         read_location = os.path.join(config["indir"], "{sample}"),
         fasta = os.path.join(config["reference_directory"],"{target}.fasta"),
-        bwt = os.path.join(config["reference_directory"],"{target}.fasta.bwt"),
-        msh = os.path.join(config["reference_directory"],"all.msh")
+        bwt = os.path.join(config["reference_directory"],"{target}.fasta.bwt")
     output:
         bam = os.path.join("{outdir}","results","bams","{sample}.{target}.bam")
     log:
