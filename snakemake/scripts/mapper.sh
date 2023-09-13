@@ -58,10 +58,10 @@ else
     trimbed=${primer_dir}/${virustype}.trim.bed
     consensus_name=${fname}.${virustype}
 
-    if ! [ -f ${primer_dir}/${virustype}.fasta.ann ]; then
-        echo "----->>>> making index files for ${virustype}"
-        bwa index ${fasta}
-    fi
+    # if ! [ -f ${primer_dir}/${virustype}.fasta.ann ]; then
+    #     echo "----->>>> making index files for ${virustype}"
+    #     bwa index ${fasta}
+    # fi
 
     echo "----->>>>>Mapping reads against serotype "${virustype}" reference sequence"
     bwa mem -v 1 -t ${cores} ${fasta} $read1 $read2 | samtools view -bS -F 4 -F 2048 | samtools sort -@ ${cores} -o ${tempdir}/${fname}.${virustype}.bam >> ${log} 2>&1
