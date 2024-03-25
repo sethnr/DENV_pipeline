@@ -34,9 +34,10 @@ if [[ ! "$TEMPDIR" || ! -d "$TEMPDIR" ]]; then
     exit 1
 fi
 
-echo "getting top ${READS} reads from infiles" 1>&2
+echo "getting top ${READS} reads from infiles in " ${1} 1>&2
 let "RLINES = $READS / 2 * 4"
-for FQ in $1/*fastq.gz; do
+for FQ in `find ${1} | grep fastq.gz`; do
+    echo $FQ
     BASENAME=$(basename ${FQ/fastq.gz/head.fastq})
     echo $BASENAME 1>&2
     echo gunzip -dc $FQ \| head -n $RLINES \> ${TEMPDIR}/${BASENAME}

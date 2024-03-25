@@ -102,6 +102,8 @@ rule indexmash:
     params:
         idx_script = os.path.join(config['workflow_directory'],"scripts","indexer.sh"),
         genome_size = "11k",
+	refdir=config["reference_directory"],
+	localfastas=expand("{target}.fasta",target=TARGETS)
     resources:
         partition="day",
         mem_mb="40G",
@@ -109,9 +111,10 @@ rule indexmash:
         runtime=300
     container: "docker://sethnr/pgcoe_anypipe:0.01"
     shell:"""
+	cd {params.refdir};
 	{params.idx_script} \
                 -m {output.msh} -g {params.genome_size} \
-                {input.fastas} >> {log.log} 2>&1
+                {params.localfastas} >> {log.log} 2>&1
 	    """
 
 
@@ -135,11 +138,19 @@ rule mapper:
         runtime=300
     container: "docker://sethnr/pgcoe_anypipe:0.01"
     shell:"""
-	{params.mapper_script}  -t {wildcards.target} \
+	if [ -f {input.read_location}/*R1* ]; then 
+            {params.mapper_script}  -t {wildcards.target} \
                 -n {wildcards.sample} -p {params.primer_dir}  \
                 -C {resources.cpus_per_task} -T {params.tmpdir} -L {log.log} \
                 {input.read_location}/*R1* {input.read_location}/*R2* \
-                 >> {log.log} 2>&1
+                 >> {log.log} 2>&1;
+        else
+            {params.mapper_script}  -t {wildcards.target} \
+                -n {wildcards.sample} -p {params.primer_dir}  \
+                -C {resources.cpus_per_task} -T {params.tmpdir} -L {log.log} \
+                {input.read_location}/Unaligned/*R1* {input.read_location}/Unaligned/*R2* \
+                 >> {log.log} 2>&1;
+        fi
 	    """
 
 
